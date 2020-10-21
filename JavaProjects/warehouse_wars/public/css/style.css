@@ -1,0 +1,279 @@
+
+body {
+    background: #eee;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    margin: 0;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.transparent {
+    opacity: 0.6;
+    filter: alpha(opacity = 60);
+}
+
+
+.collapsible_button {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+}
+.active, .collapsible_button:hover {
+    background-color: #555;
+    color: white;
+}
+.collapsable_content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+
+.overlayBanner{
+    position: fixed;
+    background-color: slategrey;
+    opacity: 0.6;
+    filter: alpha(opacity = 60);
+    top: 0;
+    left: 0;
+    height:100vh;
+    width: 100vw;
+    z-index: 9;
+    margin: 0;
+    border: 0;
+}
+.overlayBanner > div > h1 {
+    height: 70vh;
+    font-size: 7em;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+
+
+
+input[type=text] {
+    border: 2px solid;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin: 0.25rem;
+    min-width: 125px;
+    padding: 0.5rem;
+    transition: border-color 0.5s ease-out;
+}
+input:optional {
+    border-color: gray;
+}
+input:required:valid {
+    border-color: green;
+}
+input:invalid {
+    border-color: red;
+}
+input[type=text]:required:focus:valid {
+    background: url("../assets/ok.png") no-repeat 95% 50% honeydew;
+    background-size: 25px;
+}
+input[type=text]:focus:invalid {
+    background: url("../assets/invalid.png") no-repeat 95% 50% mistyrose;
+    background-size: 25px;
+}
+input[type=number]:focus:valid {
+    background: url("../assets/ok.png") no-repeat 85% 50% honeydew;
+    background-size: 25px;
+}
+input[type=number]:focus:invalid {
+    background: url("../assets/invalid.png") no-repeat 85% 50% mistyrose;
+    background-size: 25px;
+}
+input[type=number]{
+    font-size: 1.1em;
+}
+
+.valid_input {
+    background-color: honeydew;
+}
+.invalid_input {
+    background-color: mistyrose;
+}
+
+.playerId {
+    overflow-x: scroll;
+    width: 10ch;
+    height: 4ch;
+    color: gray;
+}
+
+
+
+
+
+
+#game_view_grid {
+	display: grid;
+	width: 80vw;
+	margin: auto; 
+	grid-template-columns: 1fr 1em 1fr;
+	grid-template-areas: 
+        'g g g g p'
+        'g g g g p'
+        'g g g g c'
+        'g g g g c';
+}
+#game_stage {
+    grid-area:g;
+}
+#game_players {
+    grid-area:p;
+}
+#game_control_panel {
+    grid-area:c;
+}
+#game_stage, #game_players, #game_control_panel {
+    display: block;
+}
+
+#stage_table {
+    display: block;
+    border-collapse: collapse;
+    border-spacing: 0;
+    line-height: 0;
+    margin: auto; text-align: center;
+    width: 100%;
+}
+#HP_table {
+    display: block;
+    width: 100%;
+}
+
+
+
+
+
+
+
+
+#game_ctrl {}
+#game_ctrl td {}
+.control_button {
+    border: 2px solid black;
+    min-width: 100%;
+    min-height: 100%;
+    display: block;
+    overflow: hidden;
+}
+
+
+
+#general_controls * {
+    box-sizing: border-box
+} 
+
+#general_controls table {
+    padding: 10px;
+    max-width: 100%;
+    width: 100%;
+}
+
+#general_controls input {
+    background-color: #ccc;
+    display: block;
+    margin: 10px 0;
+    padding: 10px;
+    width: 100%;
+}
+#general_controls input:hover {
+    background-color: #bbb;
+}
+#general_controls input:active {
+    background-color: #999;
+}
+
+
+
+
+
+
+
+.mob_n {
+    transform: rotate(-90deg) scaleX(-1);
+}
+.mob_ne {
+    transform: rotate(-45deg) scaleX(-1);
+}
+.mob_e {
+    transform: scaleX(-1);
+}
+.mob_se {
+    transform: rotate(45deg) scaleX(-1);
+}
+.mob_s {
+    transform: rotate(-90deg);
+}
+.mob_sw {
+    transform: rotate(-45deg);
+}
+/*.mob_w {  mob imgs face west by default
+}*/
+.mob_nw {
+    transform: rotate(45deg);
+}
+
+@keyframes flickerAnimation {
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-o-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-moz-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  @-webkit-keyframes flickerAnimation{
+    0%   { opacity:1; }
+    50%  { opacity:0; }
+    100% { opacity:1; }
+  }
+  .spawned {
+     -webkit-animation: flickerAnimation 1s infinite;
+     -moz-animation: flickerAnimation 1s infinite;
+     -o-animation: flickerAnimation 1s infinite;
+      animation: flickerAnimation 1s infinite;
+  }
+
+
+
+
+
+
+
+
+
+
+  @media all and (max-width: 600px) {
+    #game_view_grid {
+        display: grid;
+        width: 80vw;
+        margin: auto; 
+        grid-template-columns: 1fr 1em 1fr;
+        grid-template-areas: 
+            'g g'
+            'g g'
+            'p c';
+    }
+  }

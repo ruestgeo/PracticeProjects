@@ -1,3 +1,10 @@
+**/private/*
+**/database/**/*.db
+**/target
+**/.settings
+.vscode
+
+
 # Compiled class file
 *.class
 

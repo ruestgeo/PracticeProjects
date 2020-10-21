@@ -1,0 +1,57 @@
+
+
+#INIT
+client enters intro view 
+    if valid cookie exists then ask "keep name"       {type: request_name, id: <string>, name: <string>}
+    else ask for new name      {type: request_name, name: <string>}
+client send name req to server
+server send success or fail 
+client receive name json      {type: receive_name, id: <string>, name: <string>, expiry: <string>} || {type: receive_name, id: <null>}
+    (id is null if request failed)
+client enters lobby view can choose to join or create room
+    join:
+        client enters room id and send req      {type: join_room, room_id: <string>, player_id: <string>}
+        server checks if room exists and if there is space
+        if ok server sends      {type: enter_room, room_name: <string>, room_id: <string>, capacity: <num>, players: [{id,name,ready}...]}
+        else      {type: enter_room, room_name: null}
+        client receives confirmation and loads the room prep view
+        GOTO "#IN ROOM"
+    create:
+        requester (client) is shown a edit configs page
+        client submits configs       {type: create_room, player_id: <string>, name: <string>, configs: <configs json>}
+        server creates a room given those configs and inserts player into room       {type: enter_room, room_id: <string>, room_name: <string>, capacity: <num>, players: [{id,name,ready}...]}
+        client receives confirmation and loads the room prep view
+        GOTO "#IN ROOM"
+
+
+#IN ROOM
+client is able to toggle ready state       {type: player_ready, room_id: <string>, player_id: <string>} || {type: player_unready, room_id: <string>, player_id: <string>}
+server will start the stage once all players in room are ready
+    if not yet ready then send       {type: players_ready_states, room_id: <string>, players: [{id,name,ready}...]}
+    server will send room json (containing actors and such)        {type: room_init, room_id: <string>, room_name: <string>, height: <num>, width: <num>,  actors: {players/mobs/misc: [...]}, max_hp: <num>, updateNum: <num> }
+client will load room with the provided room json
+game will start GOTO #IN GAME
+
+#IN GAME (unordered)
+-- server will send rooom info each interval
+    {type: victory, room_id: <num>}
+        client will not send anymore events, but will be able to return to main view 
+    {type: defeat, room_id: <num>}
+        client will not send anymore events, but will be able to return to main view 
+    {type: update, room_id: <num>, updateNum: <num>, blanks: [[x,y] ...], updated: {players: [], mobs: [], misc: []}, removed: {players: [], mobs: [], misc: []} }
+        client will load grid icons via the provided info
+        client will be able to send movement events after
+    {type: full_update, room_id: <num>, updateNum: <num>, hp: <num>, update: {players: [{name, id, out, spawned, pos, dir} ...], mobs: [{class, pos, dir} ...], misc: [{class, pos} ...]}}
+        client will load grid icons via the provided info
+        client will be able to send movement events after
+    {type: removed_from_room, reason: <string>}
+        client will return to the lobby after displaying an alert
+-- client may send
+    {type: player_movement, player_id: <num>, room_id: <num>, dir: <[num,num]>, isPulling: <bool>, updateNum: <num> }
+        client will send player movement only after receiving an update from the server after sending each player movement
+    {type: leave_room, player_id , room_id }
+        client will send this if wanting to be removed from a room
+    {type: request_update, player_id , room_id }
+        client requests server send a full update
+
+

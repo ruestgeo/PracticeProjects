@@ -1,0 +1,379 @@
+
+
+
+<div id="lobby_div" class="lobby_div">
+    <div id="lobby_view">
+        <input type="button" value="Choose new name" onclick="loadView('intro.html', removeCookieListener);">
+        <br>
+        <br>
+        <input type="button" value="Create Room" onclick="createConfigs();">
+        <br>
+        <input type="text" id="join_room_id" value="" placeholder="Enter the room id here" required pattern="^[a-zA-Z0-9]{6,8}$">
+        <input type="button" id="join_room_button" value="Join Room" onclick="sendJoinRoom();">
+    </div>
+    <div id="configs_view" style="display:none;">
+        <input type="button" value="⏎ Return" onclick=returnToLobby()>
+        <div id="configs_panel">
+            <input type="button" id="submit_configs" value="Send configs and create Room" onclick="sendConfigs();">
+            <br>
+            <br>
+            <input type="text" id="room_name_configs" value="" placeholder="Enter a room name here" required pattern="^[a-zA-Z0-9_ ]{3,20}$">
+
+            <div id="intervalTime_configs">
+                <label for="intervalTime_range">Update interval time: </label>
+                <input type="range" id="intervalTime_range" step=100 min=100 max=1000 value=200 onchange="updateNumInput('intervalTime', this.value);">
+                <input type="number" id="intervalTime_num" value=200 step=100 min=100 max=1000 onchange="updateRangeInput('intervalTime', this.value);">
+            </div>
+            <br>
+
+            <div id="maxNumPlayers_configs">
+                <label for="maxNumPlayers_range">Maximum # of players: </label>
+                <input type="range" id="maxNumPlayers_range" step=1 min=1 max=8 value=4 onchange="updateNumInput('maxNumPlayers', this.value);">
+                <input type="number" id="maxNumPlayers_num" value=4 step=1 min=1 max=8 onchange="updateRangeInput('maxNumPlayers', this.value);">
+            </div>
+            <br>
+
+            <div id="maxHealthPoints_configs">
+                <label for="maxHealthPoints_range">Additional lives: </label>
+                <input type="range" id="maxHealthPoints_range" step=1 min=0 max=16 value=3 onchange="updateNumInput('maxHealthPoints', this.value);">
+                <input type="number" id="maxHealthPoints_num" value=3 step=1 min=0 max=16 onchange="updateRangeInput('maxHealthPoints', this.value);">
+            </div>
+            <br>
+
+            <div id="gridWidth_configs">
+                <label for="gridWidth_range">Stage width: </label>
+                <input type="range" id="gridWidth_range" step=1 min=8 max=256 value=10 onchange="updateNumInput_grid('gridWidth', this.value); updateAvailableActors();">
+                <input type="number" id="gridWidth_num" value=10 step=1 min=8 max=256 onchange="updateRangeInput_grid('gridWidth', this.value); updateAvailableActors();">
+            </div>
+            <br>
+
+            <div id="gridHeight_configs">
+                <label for="gridHeight_range">Stage height: </label>
+                <input type="range" id="gridHeight_range" step=1 min=8 max=256 value=10 onchange="updateNumInput_grid('gridHeight', this.value); updateAvailableActors();">
+                <input type="number" id="gridHeight_num" value=10 step=1 min=8 max=256 onchange="updateRangeInput_grid('gridHeight', this.value); updateAvailableActors();">
+            </div>
+            <br>
+
+
+            <div id="numBoxes_configs">
+                <label for="numBoxes_range"># of boxes to spawn: </label>
+                <input type="range" id="numBoxes_range" step=1 min=0 max=0 value=0 onchange="updateNumInput('numBoxes', this.value); updateAvailableMisc();">
+                <input type="number" id="numBoxes_num" value=0 step=1 min=0 max=0 onchange="updateRangeInput('numBoxes', this.value); updateAvailableMisc();">
+            </div>
+            <p id="boxesAvailable"></p>
+
+            <div id="numWalls_configs">
+                <label for="numWalls_range"># of walls to spawn: </label>
+                <input type="range" id="numWalls_range" step=1 min=0 max=0 value=0 onchange="updateNumInput('numWalls', this.value); updateAvailableMisc();">
+                <input type="number" id="numWalls_num" value=0 step=1 min=0 max=0 onchange="updateRangeInput('numWalls', this.value); updateAvailableMisc();">
+            </div>
+            <p id="wallsAvailable"></p>
+
+
+            <div id="randomMobs_configs">
+                <label for="numRandomMobs_range"># of mobs to spawn randomly: </label>
+                <input type="range" id="numRandomMobs_range" step=1 min=0 max=0 value=0 onchange="updateNumInput('numRandomMobs', this.value); updateAvailableMobs();">
+                <input type="number" id="numRandomMobs_num" value=0 step=1 min=0 max=0 onchange="updateRangeInput('numRandomMobs', this.value); updateAvailableMobs();">
+                <br>
+
+                <input type="button" class="collapsible_button" value="Set spawn weights" onclick="toggleCollapsable(this);">
+                <div class="collapsable_content">
+                    <label for="weightBouncers">Bouncer(mob) weight: </label>
+                    <input type="number" id="weightBouncers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="bouncerWeight"></p>
+                    <br>
+                    <label for="weightChargers">Charger(mob) weight: </label>
+                    <input type="number" id="weightChargers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="chargerWeight"></p>
+                    <br>
+                    <label for="weightCrawlers">Crawler(mob) weight: </label>
+                    <input type="number" id="weightCrawlers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="crawlerWeight"></p>
+                    <br>
+                    <label for="weightMimics">Mimic(mob) weight: </label>
+                    <input type="number" id="weightMimics" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="mimicWeight"></p>
+                    <br>
+                    <label for="weightPushers">Pusher(mob) weight: </label>
+                    <input type="number" id="weightPushers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="pusherWeight"></p>
+                    <br>
+                    <label for="weightWanderers">Wanderer(mob) weight: </label>
+                    <input type="number" id="weightWanderers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="wandererWeight"></p>
+                    <br>
+                    <label for="weightWarpers">Warper(mob) weight: </label>
+                    <input type="number" id="weightWarpers" value=1 step=1 min=0 max=1000 onchange="updateMobWeights();">
+                    <p id="warperWeight"></p>
+                </div>
+            </div>
+
+            <p id="mobsAvailable"></p>
+
+            <div id="fixedMobs_configs">
+                <input type="button" class="collapsible_button" value="Spawn Fixed Mobs" onclick="toggleCollapsable(this);">
+                <div class="collapsable_content">
+                    <label for="numBouncers"># of Bouncer(mob) to force spawn: </label>
+                    <input type="number" id="numBouncers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numChargers"># of Charger(mob) to force spawn: </label>
+                    <input type="number" id="numChargers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numCrawlers"># of Crawler(mob) to force spawn: </label>
+                    <input type="number" id="numCrawlers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numMimics"># of Mimic(mob) to force spawn: </label>
+                    <input type="number" id="numMimics" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numPushers"># of Pusher(mob) to force spawn: </label>
+                    <input type="number" id="numPushers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numWanderers"># of Wanderer(mob) to force spawn: </label>
+                    <input type="number" id="numWanderers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                    <br><br>
+                    <label for="numWarpers"># of Warper(mob) to force spawn: </label>
+                    <input type="number" id="numWarpers" value=0 step=1 min=0 onchange="updateAvailableMobs();">
+                </div>
+            </div>
+
+            
+
+        </div>
+    </div>
+</div>
+
+<script>    
+
+
+    function returnToLobby (){
+        $("#configs_view").hide();
+        $("#lobby_view").show();
+    }
+    function createConfigs (){
+        $("#lobby_view").hide();
+        $("#configs_view").show();
+    }
+    
+
+    var width = 10;
+    var height = 10;
+    var minNumMobs;
+    var maxNumMobs;
+    var availableNumMobs;
+    var minNumBoxes;
+    var maxNumBoxes
+    var availableNumBoxes;
+    var maxNumWalls;
+    var availableNumWalls;
+    var requiredMobs = false;
+    
+
+    function updateNumInput (caller, value) {
+        if ( $("#"+caller+"_num").val()*1 != value ){
+            console.log("updatedConfigs ["+caller+"_num]: "+value);
+            $("#"+caller+"_num").val(value);
+        }
+    }
+    function updateRangeInput (caller, value) {
+        if ( $("#"+caller+"_range").val()*1 != value ){
+            console.log("updatedConfigs ["+caller+"_range]: "+value);
+            $("#"+caller+"_range").val(value);
+        }
+    }
+    function updateNumInput_grid (caller, value) {
+        if (caller === "gridWidth")
+            width = value*1;
+        else if (caller === "gridHeight")
+            height = value*1;
+        updateNumInput(caller, value);
+        updateAvailableActors();
+    }
+    function updateRangeInput_grid (caller, value) {
+        if (caller === "gridWidth")
+            width = value*1;
+        else if (caller === "gridHeight")
+            height = value*1;
+        updateRangeInput(caller, value);
+        updateAvailableActors();
+    }
+    function updateAvailableMisc (){
+        var numBoxes = $("#numBoxes_range").val()*1;
+        var numWalls = $("#numWalls_range").val()*1;
+
+        availableNumBoxes = maxNumBoxes - numBoxes;
+        availableNumWalls = maxNumWalls - (availableNumBoxes + numWalls);
+
+        $("#numBoxes_range").attr("min", minNumBoxes);
+        $("#numBoxes_range").attr("max", maxNumBoxes);
+        $("#numBoxes_num").attr("min", minNumBoxes);
+        $("#numBoxes_num").attr("max", maxNumBoxes);
+        if ( numBoxes < minNumBoxes ){
+            numBoxes = minNumBoxes;
+            $("#numBoxes_range").val(numBoxes);
+            $("#numBoxes_num").val(numBoxes);
+            availableNumBoxes = maxNumBoxes - numBoxes;
+        }
+        $("#numWalls_range").attr("max", maxNumWalls);
+        $("#numWalls_num").attr("max", maxNumWalls);
+        
+        if (numBoxes >= minNumBoxes)   $("#boxesAvailable").html("Available # of Boxes: "+availableNumBoxes);
+        else   $("#boxesAvailable").html("Required # of Boxes :   "+(minNumBoxes-numBoxes)); //unreachable
+        $("#wallsAvailable").html("Available # of Walls: "+availableNumWalls);
+    }
+    function updateAvailableMobs (){
+        var numFixedMobs =
+            $("#numBouncers").val()*1+
+            $("#numChargers").val()*1+
+            $("#numCrawlers").val()*1+
+            $("#numMimics").val()*1+
+            $("#numPushers").val()*1+
+            $("#numWanderers").val()*1+
+            $("#numWarpers").val()*1;
+        var numRandomMobs = $("#numRandomMobs_num").val()*1;
+        var totalNumMobs = (numRandomMobs + numFixedMobs);
+        availableNumMobs = maxNumMobs - totalNumMobs;
+
+        //$("#numRandomMobs_range").attr("min", minNumMobs);
+        $("#numRandomMobs_range").attr("max", maxNumMobs); 
+        //$("#numRandomMobs_num").attr("min", minNumMobs);
+        $("#numRandomMobs_num").attr("max", maxNumMobs); 
+
+        if (totalNumMobs >= minNumMobs){
+            $("#mobsAvailable").html("Available # of Mobs: "+availableNumMobs);
+            requiredMobs = true;
+            if ( !$("#mobsAvailable").hasClass("valid_input") )
+                $("#mobsAvailable").addClass("valid_input")
+            if ( $("#mobsAvailable").hasClass("invalid_input") )
+                $("#mobsAvailable").removeClass("invalid_input")
+        }
+        else{
+            $("#mobsAvailable").html("Required # of Mobs :   "+(minNumMobs-totalNumMobs));
+            requiredMobs = false;
+            if ( !$("#mobsAvailable").hasClass("invalid_input") )
+                $("#mobsAvailable").addClass("invalid_input")
+            if ( $("#mobsAvailable").hasClass("valid_input") )
+                $("#mobsAvailable").removeClass("valid_input")
+        }
+    }
+    function updateAvailableActors (){
+        minNumMobs = 1; //DEBUG //Math.round((width*height)*0.05);
+        maxNumMobs = Math.round((width*height)*0.15);
+        minNumBoxes = Math.round((width*height)*0.15);
+        maxNumBoxes = Math.round((width*height)*0.25);
+        maxNumWalls = Math.round((width*height)*(0.35));
+        updateAvailableMisc();
+        updateAvailableMobs();
+    }
+    function updateMobWeights (){
+        var weightBouncers = $("#weightBouncers").val()*1;
+        var weightChargers = $("#weightChargers").val()*1;
+        var weightCrawlers = $("#weightCrawlers").val()*1;
+        var weightMimics = $("#weightMimics").val()*1;
+        var weightPushers = $("#weightPushers").val()*1;
+        var weightWanderers = $("#weightWanderers").val()*1;
+        var weightWarpers = $("#weightWarpers").val()*1;
+        var totalWeight = weightBouncers + weightChargers + weightCrawlers + weightMimics + weightPushers + weightWanderers + weightWarpers;
+        $("#bouncerWeight").html( (weightBouncers / totalWeight).toFixed(2) + "% ( "+weightBouncers+" / "+totalWeight+" ) chance to spawn");
+        $("#chargerWeight").html( (weightChargers / totalWeight).toFixed(2) + "% ( "+weightChargers+" / "+totalWeight+" ) chance to spawn");
+        $("#crawlerWeight").html( (weightCrawlers / totalWeight).toFixed(2) + "% ( "+weightCrawlers+" / "+totalWeight+" ) chance to spawn");
+        $("#mimicWeight").html( (weightMimics / totalWeight).toFixed(2) + "% ( "+weightMimics+" / "+totalWeight+" ) chance to spawn");
+        $("#pusherWeight").html( (weightPushers / totalWeight).toFixed(2) + "% ( "+weightPushers+" / "+totalWeight+" ) chance to spawn");
+        $("#wandererWeight").html( (weightWanderers / totalWeight).toFixed(2) + "% ( "+weightWanderers+" / "+totalWeight+" ) chance to spawn");
+        $("#warperWeight").html( (weightWarpers / totalWeight).toFixed(2) + "% ( "+weightWarpers+" / "+totalWeight+" ) chance to spawn");
+    }
+
+
+    //update on page load
+    updateAvailableActors();
+    updateMobWeights();
+
+
+    function sendJoinRoom (){ //{type: join_room, room_id: <string>, player_id: <string>}
+        if ( !document.getElementById("join_room_id").validity.valid ){
+            console.error("Invalid join room id pattern");
+            return;
+        }
+        var json = {'type': 'join_room', 'room_id': $('#join_room_id').val(), 'player_id': playerId};
+        console.log(json);
+        socket.send(JSON.stringify(json));
+    }
+
+    function sendConfigs (){
+        var invalid = [];
+        if ( !document.getElementById("room_name_configs").validity.valid ){
+            invalid.push("Invalid room name");
+        }
+        if ( !document.getElementById("intervalTime_num").validity.valid ){
+            invalid.push("Invalid game update interval time");
+        }
+        if ( !document.getElementById("maxNumPlayers_num").validity.valid ){
+            invalid.push("Invalid max # of players");
+        }
+        if ( !document.getElementById("maxHealthPoints_num").validity.valid ){
+            invalid.push("Invalid # of additional lives");
+        }
+        if ( !document.getElementById("gridWidth_num").validity.valid ){
+            invalid.push("Invalid stage width");
+        }
+        if ( !document.getElementById("gridHeight_num").validity.valid ){
+            invalid.push("Invalid stage height");
+        }
+        if ( !document.getElementById("numBoxes_num").validity.valid ){
+            invalid.push("Invalid # of boxes");
+        }
+        if ( !document.getElementById("numWalls_num").validity.valid ){
+            invalid.push("Invalid # of walls");
+        }
+        if ( !requiredMobs ){
+            invalid.push("Insufficient mobs");
+        }
+        if ( invalid.length > 0 ){
+            console.log("ERROR Invalid configs form ::  "+invalid);
+            var str = "";
+            for (var i of invalid){
+                str += "\n--"+i;
+            }
+            alert("Invalid configs"+str);
+            return;
+        }
+            
+        var room_name = $("#room_name_configs").val();
+        var configs_json = {
+            "intervalTime" : $("#intervalTime_range").val()*1,
+            "maxNumPlayers" : $("#maxNumPlayers_range").val()*1,
+            "maxHealthPoints" : $("#maxHealthPoints_range").val()*1,
+
+            "gridWidth" : $("#gridWidth_range").val()*1,
+            "gridHeight" : $("#gridHeight_range").val()*1,
+
+            "numBoxes" : $("#numBoxes_range").val()*1,
+            "numWalls" : $("#numWalls_range").val()*1,
+
+            "numRandomMobs" : $("#numRandomMobs_range").val()*1,
+            "randomMobWeights" : {
+                "Bouncer" : $("#weightBouncers").val()*1,
+                "Pusher" : $("#weightPushers").val()*1,
+                "Wanderer" : $("#weightWanderers").val()*1,
+                "Charger" : $("#weightChargers").val()*1,
+                "Crawler" : $("#weightCrawlers").val()*1,
+                "Warper" : $("#weightWarpers").val()*1,
+                "Mimic" : $("#weightMimics").val()*1
+            },
+            "fixedMobAmounts" : {
+                "numBouncers" : $("#numBouncers").val()*1,
+                "numPushers" : $("#numPushers").val()*1,
+                "numWanderers" : $("#numWanderers").val()*1,
+                "numChargers" : $("#numChargers").val()*1,
+                "numCrawlers" : $("#numCrawlers").val()*1,
+                "numWarpers" : $("#numWarpers").val()*1,
+                "numMimics" : $("#numMimics").val()*1
+            }
+        }
+        if ( !window.confirm("Confirm the following configs:\n"+JSON.stringify(configs_json, null, 4)) )
+            return;
+        var json = {'type': 'create_room', 'player_id': playerId, 'name': room_name, "configs": configs_json};
+        console.log(json);
+        socket.send(JSON.stringify(json));
+    }
+    
+</script>

@@ -1,0 +1,153 @@
+
+
+
+<div id="room_prep_div" class="room_prep_div">
+    <input type="button" id="leave_prep_room" value="Leave and return to lobby" onclick="leaveRoom();">
+    <br>
+    <br>
+    <h1 id="prep_room_name"></h1>
+    <h2 id="prep_room_id"></h2>
+    <div id="player_ready_state">
+        <table>
+            <tr>
+                <td>
+                    <p id="player_state_num">--</p>
+                </td>
+                <td>
+                    <img id="player_state_icon" src="" alt="Player">
+                </td>
+                <td>
+                    <p id="player_state_name">name</p>
+                </td>
+                <td>
+                    <p id="player_state_id" class="playerId">id</p>
+                </td>
+                <td>
+                    <input type="button" id="player_state_ready" value="Not Ready (click to ready)" onclick="sendReadyState();">
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div id="slot_ready_states">
+    </div>
+</div>
+<script>
+
+        var clientIsReady = false;
+        var capacity = 0;
+        function sendReadyState (){
+            var json = {"type": !clientIsReady?"player_ready":"player_unready", 'room_id': roomId, 'player_id': playerId};
+            console.log(json);
+            socket.send(JSON.stringify(json));
+        }
+        function loadPlayerReadyStates (json){
+            var players = json["players"];
+            capacity = json["capacity"];
+
+            //load the room id and name
+            $("#prep_room_name").html("Room name: "+roomName);
+            $("#prep_room_id").html("Room id token: "+roomId);
+
+            var readyDiv = document.getElementById("slot_ready_states");
+            while (readyDiv.firstChild) { //empty the div
+                readyDiv.removeChild(readyDiv.firstChild);
+            }
+            
+            //create the table
+            var table = document.createElement("table");
+            table.setAttribute("border","1");
+            table.setAttribute("cellspacing","0");
+            table.setAttribute("cellpadding","0");
+            table.setAttribute("id","player_ready_table");
+            for (var i=1;  i<capacity;  i++){
+                var row = document.createElement("tr");
+                    var rowPrefix = "player_state_slot_"+i;
+
+                    var cell = document.createElement("td");
+                    var content = document.createElement("p");
+                    content.setAttribute("id", rowPrefix+"_num"); 
+                    var cell1 = document.createElement("td");
+                    var content1 = document.createElement("img");
+                    content1.setAttribute("id", rowPrefix+"_icon"); 
+                    var cell2 = document.createElement("td");
+                    var content2 = document.createElement("p");
+                    content2.setAttribute("id", rowPrefix+"_name"); 
+                    var cell3 = document.createElement("td");
+                    var content3 = document.createElement("p");
+                    content3.setAttribute("id", rowPrefix+"_id"); 
+                    content3.setAttribute("class", "playerId");
+                    var cell4 = document.createElement("td");
+                    var content4 = document.createElement("p");
+                    content4.setAttribute("id", rowPrefix+"_ready");
+                    
+                    content.innerHTML = "--";
+                    content1.setAttribute("alt", '-');
+                    content2.innerHTML = "--";
+                    content3.innerHTML = "--";
+                    content4.innerHTML = "Empty slot";
+
+                    cell.appendChild(content);
+                    row.appendChild(cell);
+                    cell1.setAttribute("overflow", "hidden");
+                    cell1.appendChild(content1);
+                    row.appendChild(cell1);
+                    cell2.appendChild(content2);
+                    row.appendChild(cell2);
+                    cell3.appendChild(content3);
+                    row.appendChild(cell3);
+                    cell4.appendChild(content4);
+                    row.appendChild(cell4);
+                    
+                    table.appendChild(row); 
+            }
+            readyDiv.appendChild(table);
+
+            //populate the table with available player data
+            updatePlayerReadyStates(players);
+        }
+
+        function updatePlayerReadyStates (players){
+            let t = 1;
+            for (var i=1;  i<=players.length;  i++){
+                var player = players[i-1];
+                if ( player["id"] !== playerId ){
+                    $("#player_state_slot_"+t+"_num").html(i);
+
+                    $("#player_state_slot_"+t+"_icon").attr("src", 'assets/icons/player'+i+'-s.gif');
+                    $("#player_state_slot_"+t+"_icon").attr("alt", 'Player '+i)
+
+                    $("#player_state_slot_"+t+"_name").html(player["name"]);
+
+                    $("#player_state_slot_"+t+"_id").html(player["id"]);
+
+                    $("#player_state_slot_"+t+"_ready").html(player["ready"] ? "Ready" : "Not Ready");
+                    t++;
+                }
+                else { //this/client player
+                    clientIsReady = player["ready"];
+                    $("#player_state_num").html(i);
+
+                    $("#player_state_icon").attr("src", 'assets/icons/player'+i+'-s.gif');
+                    $("#player_state_icon").attr("alt", 'Player '+i)
+
+                    $("#player_state_name").html(player["name"]);
+
+                    $("#player_state_id").html(player["id"]);
+
+                    $("#player_state_ready").attr("value", clientIsReady ? "Ready (click to unready)" : "Not Ready (click to ready)");
+                }
+            }
+            for (var i=players.length;  i<=capacity;  i++){
+                $("#player_state_slot_"+i+"_num").html("--");
+
+                $("#player_state_slot_"+i+"_icon").attr("src", '');
+                $("#player_state_slot_"+i+"_icon").attr("alt", '--')
+
+                $("#player_state_slot_"+i+"_name").html("-");
+
+                $("#player_state_slot_"+i+"_id").html("--");
+
+                $("#player_state_slot_"+i+"_ready").html("Empty Slot");
+            }
+        }
+</script>

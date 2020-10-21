@@ -1,2 +1,4 @@
-# JavaGames
-A collection of games for a Java server; made for practice
+# JavaProjects
+A collection of small Java projects; made for practice
+
+
