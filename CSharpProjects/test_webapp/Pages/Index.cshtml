@@ -1,0 +1,31 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome@(Model.Name==null ? " new user" : " "+Model.Name)</h1>
+    <form method="post" asp-page="Index">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" placeholder="Enter a username" autocomplete="off">
+        <input type="submit" class="btn btn-primary" value="Submit">
+    </form>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <br>
+    <input type="button" onclick='window.location.href="@Url.Page("testDir/TestView")";' value="Test Button">
+    <br>
+    <a class="text-dark" asp-area="" asp-page="/testDir/TestView"><input type="button" value="Test asp-page:href Button"></a>
+    <br>
+    <a asp-area="" asp-action="HelloWorld"><input type="button" value="Test asp-action anchor"></a>
+    <br>
+    <br>
+    <input type="button" value="test counter" onclick='getPressCount("#test_counter_val");' >
+    <input type="button" value="test counter2" onclick='getCount2("#test_counter_val");' >
+    <p id="test_counter_val">button press count is @Model.GetCount()</p>
+    <br>
+    <br>
+    <input type="button" value="test reqBody" onclick='sendBody("#test_req_body");' >
+    <input type="button" value="test reqBody" onclick='sendBody2("#test_req_body");' >
+    <div id="test_req_body"></div>
+</div>

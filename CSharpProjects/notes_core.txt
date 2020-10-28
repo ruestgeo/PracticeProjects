@@ -1,0 +1,53 @@
+dotnet new <templateName> -o <dirName>
+--create a new .net core project from a template and place it in the specified directory (to be made)
+
+dotnet restore
+--use when moving folder and project contents
+--use to remake `obj` folder (also made after `run` and `build`)
+
+dotnet build
+
+dotnet run
+
+dotnet publish -c release -r [os].[version]-[arch] --self-contained
+--https://docs.microsoft.com/en-us/dotnet/core/rid-catalog
+--publish a self-contained (executables with netcore runtime included)
+--distrib must include the entire publish folder to exec
+    dotnet publish -c release -r win10-x64 --self-contained
+    dotnet publish -c release -r ubuntu.18.04-x64 --self-contained
+    dotnet publish -c release -r linux-x64 --self-contained
+    
+
+
+
+
+
+webapp
+--https://www.nuget.org/packages/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/
+    `dotnet add package Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation --version 3.1.9`
+--https://www.nuget.org/packages/Microsoft.AspNetCore.SpaServices
+    `dotnet add package Microsoft.AspNetCore.SpaServices --version 3.1.9`
+--  Microsoft.AspNetCore.EntityFramework
+        .SqlServer  (or  .Relational)
+        .Tools
+
+https://www.jetbrains.com/dotnet/guide/tutorials/basics/
+https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-3.1
+https://andrewlock.net/model-binding-json-posts-in-asp-net-core/
+https://weblog.west-wind.com/posts/2017/sep/14/accepting-raw-request-body-content-in-aspnet-core-api-controllers
+https://radu-matei.com/blog/aspnet-core-websockets-middleware/
+
+
+
+
+can set the URLS using either of the following environment variables:
+    DOTNET_URLS
+    ASPNETCORE_URLS
+If you set both of these environment variables, the ASPNETCORE_URLS parameter takes precedence.
+You can set environment variables in the usual way based on your environment. For example, using the command line:
+    setx ASPNETCORE_URLS "{scheme}://*:{port}"
+using powershell
+    $Env: ASPNETCORE_URLS = "{scheme}://*:{port}"
+or using bash:
+    export ASPNETCORE_URLS="{scheme}://*:{port}"
+(can add multiple by using semi-colon {url};{url}  )

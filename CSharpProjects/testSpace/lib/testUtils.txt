@@ -1,0 +1,20 @@
+using System;
+
+namespace testUtils{
+    /**
+    *   <summary>
+    *       test utils library
+    *   </summary>
+    */
+    public class Utils{
+        /**
+        *   <summary>
+        *       Print a message on a newline
+        *   <param name="message"> The message to write on a newline </param>
+        *   </summary>
+        */
+        public static void printNewLine (String message){
+            Console.WriteLine("\n"+message);
+        }
+    }
+}
