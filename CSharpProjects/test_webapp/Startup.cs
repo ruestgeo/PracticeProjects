@@ -67,7 +67,7 @@ namespace test_webapp
                 ReceiveBufferSize = 4 * 1024
             });
             app.Use(async (context, next) => {
-                if (context.Request.Path == "/ws"){
+                if (context.Request.Path == "/ws" || context.Request.Path == "/ws/"){
                     if (context.WebSockets.IsWebSocketRequest){
                         WebSocket webSocket = await context.WebSockets.AcceptWebSocketAsync();
                         String socketId = await _webSocketHandler.OnConnected(webSocket);

@@ -76,7 +76,19 @@ function sendBody2(elem){
 
 
 function connectWebSocket(){
-    socket = new WebSocket('wss://192.168.0.222:38080/ws');
+    var url = window.location.href;
+    var protocol = window.location.protocol; 
+    var hostname = window.location.hostname; 
+    var port = window.location.port; 
+    var ws_path = "/ws/";
+    if ( !hostname || hostname === "" ) hostname = "#local";
+    if ( !port || port === "" ) port = "80";
+    console.log(url);
+    console.log(protocol);
+    console.log(hostname);
+    console.log(port);
+    var connectURL = "wss://"+hostname+":"+parseInt(port)+ws_path;
+    socket = new WebSocket(connectURL);
     socket.onopen = function (event){
         console.log("Connected to server\n--"+event.type);
         socket.send(JSON.stringify({"type": "dev", "content":"HELLO WORLD!"}));

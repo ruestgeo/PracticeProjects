@@ -18,7 +18,7 @@
     "test_webapp": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://0.0.0.0:38080, http://0.0.0.0:38081",
+      "applicationUrl": "https://0.0.0.0:38080;http://0.0.0.0:38081",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
