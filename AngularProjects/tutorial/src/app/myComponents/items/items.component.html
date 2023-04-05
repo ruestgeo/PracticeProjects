@@ -1,0 +1,5 @@
+<app-add-item [@simpleAnimation]="addItemVisible" *ngIf="addItemVisible" class="collapsible"></app-add-item>
+<app-item *ngFor="let elem of items" [item]="elem" 
+    (onDeleteItem)="deleteItemEnd(elem)" (onUpdateItem)="updateItemEnd($event)">
+</app-item>
+

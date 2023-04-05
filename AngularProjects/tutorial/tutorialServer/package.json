@@ -1,0 +1,19 @@
+{
+  "name": "tutorialserver",
+  "version": "1.0.0",
+  "description": "backend for angular tutorial",
+  "main": "index.ts",
+  "scripts": {
+    "start": "node dist/tutorialserver/index.js",
+    "build": "npx tsc",
+    "dev": "npx tsc && node dist/tutorialserver/index.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^16.18.21",
+    "typescript": "^5.0.2"
+  }
+}
