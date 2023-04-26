@@ -1,0 +1,52 @@
+<h3 *ngIf="!ready" [innerText]="'Room token: '+roomId" class="room-id"></h3>
+
+<div *ngIf="ready">
+    <table class="stage">
+        <tr *ngFor="let row of stage" class="stage">
+            <td *ngFor="let cell of row" class="stage">
+                <img src="{{cell.src}}" alt="{{cell.alt}}" [ngClass]="cell.classes">
+            </td>
+        </tr>
+    </table>
+
+    <table>
+        <tr>
+            <td *ngFor="let hp of hpStatus">
+                <img [src]="this.imgs[hp ? 'hp+' : 'hp-']" [alt]="this.alts[hp ? 'hp+' : 'hp-']" [ngClass]="hp ? ['hp+'] : ['hp-']">
+            </td>
+        </tr>
+    </table>
+</div>
+    
+
+
+<div>
+    <table class="players">
+        <tr *ngFor="let player of players" class="players">
+            <td class="players">
+                <p>{{player.num+1}}</p>
+            </td>
+            <td *ngIf="ready" class="players">
+                <img [src]="!player.out ? 'assets/game/player'+(player.num+1)+'-s.gif' : 'assets/game/grave.gif'" [alt]="'Player '+(player.num+1)">
+            </td>
+            <td *ngIf="!ready" class="players">
+                <img [src]="player.num < 0 ? '' : 'assets/game/player'+(player.num+1)+'-s.gif'" [alt]="player.num < 0 ? '--' : 'Player '+(player.num+1)">
+            </td>
+            <td class="players name">
+                <p>{{player.name}}</p>
+            </td>
+            <td class="players">
+                <p class="playerId">{{player.id}}</p>
+            </td>
+            <td *ngIf="!ready" class="players ready-button">
+                <input type="button" 
+                    [value]="player.num < 0 ? 'Empty slot' : (player.out ? 'Not Ready': 'Ready')"
+                    [ngClass]="player.id === userId ? 
+                        (player.out ? ['iNotReady', 'readyButton'] : ['iReady', 'readyButton']) : 
+                        (player.out ? ['playerNotReady', 'readyButton'] : ['playerReady', 'readyButton'])"
+                    [disabled]="player.id !== userId"
+                    (click)="player.id === userId ? onReady() : null"  >
+            </td>
+        </tr>
+    </table>
+</div>

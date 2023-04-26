@@ -1,0 +1,32 @@
+.chat-status-entry {
+    font-family: Arial, Helvetica, sans-serif;
+    display:flex;
+    margin: 6px 4px;
+    padding: 10px 10px;
+    border-radius: 10px;
+    justify-content: space-between;
+}
+.chat-status-text {
+    float:left;
+}
+.chat-status-close {
+    float: right;
+    margin: 0px 5px;
+    padding: 5px 10px;
+}
+.chat-status-sending {
+    background-color: cadetblue;
+    color: black;
+}
+.chat-status-success {
+    background-color: lightgreen;
+    color: darkslategray;
+}
+.chat-status-failed {
+    background-color: orchid;
+    color: yellow;
+}
+.chat-status-error {
+    background-color: salmon;
+    color: darkred;
+}

@@ -1,0 +1,21 @@
+<div class="item" [ngStyle]="{'border-color':item.color}" >
+    <div class="grid-element">
+        <h3 [ngClass]="{ highlight: item.toggle }" 
+            [ngStyle]="{ 'height': (item.description ? 'fit-content' : '100%') }"
+            (click)="toggleHighlight(item)">
+                {{item.text}}
+        </h3>
+        <p *ngIf="item.description">{{item.description}}</p>
+        <!-- 
+        to display optionally we can either use
+            [ngStyle]="{ 'display': (item.description ? 'flex' : 'none')
+            this option offers more flexibility in someways, but not really suitable for this use case
+        or
+        *ngIf="item.description"
+         -->
+    </div>
+    <div class="grid-element">
+        <app-button color="white" textColor="red" text="X"  floatAlign='right' 
+            (dblclick)="deleteItem(item)"></app-button>
+    </div>
+</div>

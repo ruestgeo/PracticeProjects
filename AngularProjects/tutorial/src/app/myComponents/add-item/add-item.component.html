@@ -1,0 +1,30 @@
+<form [formGroup]="addItemForm" (ngSubmit)="onSubmit()" class="add-form">
+    <div class="form-control">
+        <label for="add_item_text">Item</label>
+        <input type="text" name="item_text" id="add_item_text" placeholder="add item" required="required"
+            formControlName="textControl">
+    </div>
+
+    <div class="form-control">
+        <label for="add_item_description">Description</label>
+        <input type="text" name="item_description" id="add_item_description" placeholder="item description"
+            formControlName="descriptionControl">
+    </div>
+
+    <div class="form-control" formGroupName="colorGroup">
+        <label for="add_item_color">Color</label>
+        <select class='color-select' name="item_color" id="add_item_color" 
+            formControlName="colorSelectControl"
+            [ngStyle]="{'border-color': selectedColor}" 
+            (change)="onColorSelect($event)">
+            <option [value]="color.value" *ngFor="let color of colors" [innerHTML]="color.name"></option>
+            <option [value]="color.value" *ngFor="let color of colorsObs | async" [innerHTML]="color.name"></option>
+        </select>
+        <input class='color-select' type="color" name="item_color_custom" id="add_item_color_custom" 
+            formControlName="colorCustomControl"
+            [value]="selectedColor" 
+            (change)="onColorCustom($event)">
+    </div>
+
+    <input type="submit" value="Save Item" class="btn btn-block">
+</form>

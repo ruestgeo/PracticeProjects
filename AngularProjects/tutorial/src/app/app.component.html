@@ -1,0 +1,8 @@
+<H1> {{ title }}</H1>
+<!--{{ 1 + 2 }}-->
+<app-button *ngIf="hasRoute('/')"></app-button>
+<!-- [] for input and () for output/events -->
+<app-button color='lightblue' textColor="black" text='test' (myButtonClick)="buttonAlert('hello world!\ntest button has been pressed!')"></app-button>
+
+<!--<app-main></app-main>-->
+<router-outlet></router-outlet>

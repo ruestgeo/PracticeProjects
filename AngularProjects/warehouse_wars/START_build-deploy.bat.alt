@@ -1,0 +1,38 @@
+if not "%1" == "" goto :%1
+
+
+start "WW Java Server" "%~dpfx0" cmd1
+start "WW Angular" "%~dpfx0" cmd2
+goto :eof
+
+
+
+:cmd1
+
+echo "Building & Deploying Java Server"
+cmd /c mvn compile && mvn exec:java
+pause
+
+
+
+
+:cmd2
+
+echo "Building Angular Front-end & Deploying HTTP Server"
+@echo off
+
+set port=4200
+
+for /f "tokens=1,2 delims=:{} " %%A in (configs.json) do (
+    If "%%~A"=="port" set port=%%~B
+)
+echo %port%
+
+cmd /c xcopy /F /Y .\configs.json .\front-end\ww-angular\src\assets\configs
+
+cd front-end\ww-angular
+cmd /c npm run build
+
+REM cmd /k http-server -p %port% dist\ww-angular --proxy http://localhost:%port%?
+cmd /k http-server -p 4200 dist\ww-angular --proxy http://localhost:4200?
+pause

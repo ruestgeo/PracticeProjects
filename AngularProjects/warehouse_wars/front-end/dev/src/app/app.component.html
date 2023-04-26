@@ -1,0 +1,15 @@
+Dev
+<ol>
+  <li [routerLink]="['/']">/</li>
+  <li [routerLink]="['/a']">/a</li>
+  <li [routerLink]="['/b']">/b</li>
+  <li [routerLink]="['/a/a']">/a/a</li>
+  <li [routerLink]="['/b/b']">/b/b</li>
+</ol>
+<button (click)="nav('/')">nav /</button>
+<button (click)="nav('/a')">nav A</button>
+<button (click)="nav('/b')">nav B</button>
+<button (click)="nav('/a/a')">nav AA</button>
+<button (click)="nav('/b/b')">nav BB</button>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,135 @@
+/* You can add global styles to this file, and also import other style files */
+
+
+body {
+    background: #eee;
+    padding-top: 10vh;
+    padding-bottom: 10vh;
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.transparent {
+    opacity: 0.6;
+    filter: alpha(opacity = 60);
+}
+
+
+
+.underlay {
+    filter: blur(2px);
+}
+.underlay-gray {
+    filter: grayscale(80%)
+}
+.overlayBanner{
+    position: fixed;
+    background-color: rgba(112, 128, 144, 0.6);
+    /*opacity: 0.6;*/
+    /*filter: opacity(60%)*/
+    top: 0;
+    left: 0;
+    /*height:100vh;*/
+    width: 100vw;
+    z-index: 9;
+    margin: 0;
+    border: 0;
+}
+.overlayContainer {
+    height: 70vh;
+    font-size: 7em;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.overlayInteractable {
+    cursor: pointer;
+}
+.overlayFullscreen {
+    height:100vh;
+    width: 100vw;
+}
+.screen-centered-text {
+    text-align: center;
+    margin-top: 50vh;
+}
+
+
+.collapsible_button {
+    background-color: #777;
+    color: white;
+    cursor: pointer;
+    padding: 18px;
+}
+.active, .collapsible_button:hover {
+    background-color: #555;
+    color: white;
+}
+.collapsable_content {
+    padding: 0 18px;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+    background-color: #f1f1f1;
+}
+
+
+
+
+
+
+input[type=text] {
+    border: 2px solid;
+    border-radius: 4px;
+    font-size: 1rem;
+    margin: 0.25rem;
+    min-width: 125px;
+    padding: 0.5rem;
+    transition: border-color 0.5s ease-out;
+}
+input:optional {
+    border-color: gray;
+}
+input:required:valid {
+    border-color: green;
+}
+input:invalid {
+    border-color: red;
+}
+input[type=text]:required:focus:valid {
+    background: url("src/assets/ok.png") no-repeat 95% 50% honeydew;
+    background-size: 25px;
+}
+input[type=text]:focus:invalid {
+    background: url("src/assets/invalid.png") no-repeat 95% 50% mistyrose;
+    background-size: 25px;
+}
+input[type=number]:focus:valid {
+    background: url("src/assets/ok.png") no-repeat 85% 50% honeydew;
+    background-size: 25px;
+}
+input[type=number]:focus:invalid {
+    background: url("src/assets/invalid.png") no-repeat 85% 50% mistyrose;
+    background-size: 25px;
+}
+input[type=number]{
+    font-size: 1.1em;
+}
+
+.valid_input {
+    background-color: honeydew;
+}
+.invalid_input {
+    background-color: mistyrose;
+}
+
+
+
+
