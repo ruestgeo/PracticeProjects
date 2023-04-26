@@ -1,0 +1,10 @@
+﻿@page
+@model TestViewModel
+@{
+    ViewData["Title"] = "TestView page";
+}
+
+<div class="text-center">
+    <p>This is a test</p>
+    <p>Username: @(ViewData["Name"] == null ? "*undefined*" : ViewData["Name"])</p>
+</div>

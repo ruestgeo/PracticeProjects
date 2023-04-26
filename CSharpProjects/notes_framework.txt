@@ -1,0 +1,14 @@
+csc [filename].cs  <[filenameN].cs ...>
+-- compile an exe
+-- can include multiple files to compilation to include them into assembly 
+-- can use `csc .\*.cs` to include all .cs files
+    `csc -recurse:.\*.cs`  to 
+-- `-reference:[filename].dll` to add a library reference
+
+
+https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/compiler-options/
+
+
+
+`msbuild`
+-- builds based on .csproj
