@@ -1,0 +1,11 @@
+
+	<div id="chat_div" class="chat">
+		<script language="javascript" src="chat.js"></script>
+		<h3>Chat Console</h3>
+		<form> 
+			<label for="chat_input" id="chat_label">---</label>
+			<input type="text" id="chat_input" /><input type="button" id="chatButton" value="send" disabled='disabled' onclick="mySend();" />
+			<input type="button" id="toggleScroll" value="Disable Jump-To-Newest" onclick="toggleChatScroll();" />
+		</form>
+		<div id="chat_box" style="border:1px solid black; width:100%; height:100px; overflow: auto;" ></div>
+	</div>

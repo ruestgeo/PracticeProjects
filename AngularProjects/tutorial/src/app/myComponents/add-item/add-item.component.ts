@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -27,6 +27,8 @@ see https://youtu.be/3dHNOWTI7H8?t=5186
   styleUrls: ['./add-item.component.css']
 })
 export class AddItemComponent implements OnInit {
+  @Output() onAddItem: EventEmitter<Item> = new EventEmitter();
+
   item_text?: string;
   item_description?: string;
   item_color?: string;
@@ -123,9 +125,8 @@ which can also be set to update on `blur`
     if (this.item_text) newItem['text'] = this.item_text;
     if (this.item_description) newItem['description'] = this.item_description;
     if (this.item_color) newItem['color'] = this.item_color;
-    //TODO submit
 
-    
+    this.onAddItem.emit(newItem);
   }
 
 
@@ -133,7 +134,9 @@ which can also be set to update on `blur`
     let element: HTMLSelectElement = (event.target as HTMLSelectElement);
     let oldColor = this.selectedColor;
     this.selectedColor = element.value;
-    this.addItemForm.controls['colorGroup'].patchValue({'colorCustomControl': element.value}); //autofills for name, search in colors & colorObs
+    this.item_color = element.value;
+    //this.addItemForm.controls['colorGroup'].patchValue({'colorCustomControl': element.value}); //autofills for name, search in colors & colorObs
+    this.addItemForm.get(['colorGroup','colorCustomControl'] as const)?.patchValue(element.value);
     console.log(`change color from ${oldColor} to ${this.selectedColor}`);
   }
   onColorCustom (event: Event){
@@ -141,7 +144,9 @@ which can also be set to update on `blur`
     let oldColor = this.selectedColor;
     this.selectedColor = element.value;
     this.colors[1].value = element.value;
-    this.addItemForm.controls['colorGroup'].patchValue({'colorSelectControl': this.colors[1].value});
+    this.item_color = element.value;
+    //this.addItemForm.controls['colorGroup'].patchValue({'colorSelectControl': this.colors[1].value});
+    this.addItemForm.get(['colorGroup','colorSelectControl'] as const)?.patchValue(this.colors[1].value);
     console.log(`custom change color from ${oldColor} to ${this.selectedColor}`);
   }
 

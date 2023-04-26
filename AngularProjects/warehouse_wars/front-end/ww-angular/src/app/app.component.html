@@ -1,0 +1,24 @@
+
+<h1>Warehouse Wars</h1>
+<div>
+    <h1 class="overlayBanner" *ngIf="state === states.connecting">Connecting to game server...</h1>
+
+    <h1 class="overlayBanner" *ngIf="state === states.connected">Connected!</h1>
+    
+    <div *ngIf="state === states.error">
+        <h3 [innerText]="errorMessage"></h3>
+        <button (click)="connect()" >Retry connection</button>
+    </div>
+    
+
+    <!-- The routed views render in the <router-outlet>-->
+    <router-outlet></router-outlet>
+
+    <br>
+    <br>
+    <br>
+
+    <chat-component></chat-component>
+</div>
+
+

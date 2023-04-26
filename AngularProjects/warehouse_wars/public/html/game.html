@@ -1,0 +1,222 @@
+
+
+
+<div id="game_div" class="game_div">
+	<script language="javascript" src="javascript/controls.js"></script>
+	<script language="javascript" src="javascript/stage.js"></script>
+	<div id="game_debug"></div>
+	<div id="game_view_grid">
+		<div id="game_stage"></div> <!-- the div to fill with the stage table-->
+		<div id="game_players"></div>
+		<div id="game_control_panel">
+			<table>
+				<tr>
+					<td>
+						<table id="game_ctrl"> <!-- 🢀 🢂 🢁 🢃 🢄 🢅 🢆 🢇   pull: ⤟   push: ⭲   -->
+							<tr>
+								<td>&nbsp;</td> 
+								<td><img id="ctrl_n" class="control_button" src="assets/icons/n.gif" alt="🢁" onclick="send_control([0,-1]);" /></td>
+								<td>&nbsp;</td>
+							</tr>
+							<tr>
+								<td><img id="ctrl_w" class="control_button" src="assets/icons/w.gif" alt="🢀" onclick="send_control([-1,0]);" /></td>
+								<td><img id="ctrl_shift" class="control_button" src="assets/icons/toggle-off.gif" alt="⭲" onclick="specialActionToggle();" /></td>
+								<td><img id="ctrl_e" class="control_button" src="assets/icons/e.gif" alt="🢂" onclick="send_control([1,0]);" /></td>
+							</tr>
+							<tr>
+								<td>&nbsp;</td>
+								<td><img id="ctrl_s" class="control_button" src="assets/icons/s.gif" alt="🢃" onclick="send_control([0,1]);" /></td>
+								<td>&nbsp;</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+	</br>
+	<div id="general_controls">
+		<table>
+			<td>
+				<td><input type='button' id="gyroToggle" value="Turn On GyroMovement" onclick="toggleGyroMove();" /></td>
+			</td>
+			<td>
+				<input type="button" id="toggle_info" value="Toggle Info" onclick="toggleDisplay('game_info_div')" />
+			</td>
+			<td>
+				<input type='button' value="Leave Room" onclick="leaveRoom();" />
+			</td>
+		</table>
+	</div>
+	
+	
+	<div id="game_info_div">
+		<h1>Warehouse Wars</h1>
+		<table>
+			<tr>
+				<td>
+					<h2>Legend</h2>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<table class="legend">
+						<tr>
+							<th> Player </th>
+							<td> &nbsp; </td>
+							<td> 
+								<table>
+									<tr>
+										<td><img src="assets/icons/player1-n.gif" alt="1⮝"  id="playerN_image" /> </td>
+										<td><img src="assets/icons/player2-e.gif" alt="2⮞"  id="playerE_image" /> </td>
+									</tr>
+									<tr>
+										<td><img src="assets/icons/player3-w.gif" alt="3⮜"  id="playerW_image" /> </td>
+										<td><img src="assets/icons/player4-s.gif" alt="4⮟"  id="playerS_image" /> </td>
+									</tr>
+								</table>
+							</td>
+							<td> &nbsp; </td>
+						</tr>
+						<tr></tr>
+						<tr>
+							<th> Controls </th>
+							<td> North </td>
+							<td> <img src="assets/icons/n.gif" alt="🢁" /> </td>
+							<td> Move north, equivalent to pressing the 'W' key 
+								</br> On mobile you can move by touch and/or tilt if toggled on
+							</td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> East </td>
+							<td> <img src="assets/icons/e.gif" alt="🢂" /> </td>
+							<td> Move east, equivalent to pressing the 'D' key 
+								</br> On mobile you can move by touch and/or tilt if toggled on
+							</td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> South </td>
+							<td> <img src="assets/icons/s.gif" alt="🢃" /> </td>
+							<td> Move south, equivalent to pressing the 'S' key 
+								</br> On mobile you can move by touch and/or tilt if toggled on
+							</td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> West </td>
+							<td> <img src="assets/icons/w.gif" alt="🢀" /> </td>
+							<td> Move west, equivalent to pressing the 'A' key 
+								</br> On mobile you can move by touch and/or tilt if toggled on
+							</td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Toggle Off </td>
+							<td><img src="assets/icons/toggle-off.gif" alt="⭲" /></td>
+							<td> Default pushing </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Toggle On </td>
+							<td><img src="assets/icons/toggle-on.gif" alt="⤟" /></td>
+							<td> Enable pulling, equivalent to holding down Shift 
+								</br> On mobile you can pull by touching the screen with two fingers
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<th> Mobs </th>
+							<td> &nbsp; </td>
+							<td> &nbsp; </td>
+							<td> Clear all mobs by surrounding them with boxes! (some exceptions)</br> If you push an enemy, or an enemy pushes you, you're out! </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Generic </td>
+							<td> <img src="assets/icons/mob.gif" alt="\-/"  id="mob_image" /> </td>
+							<td> moves in a direction then flips when it hits something </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Wanderer </td>
+							<td> <img src="assets/icons/wanderer.gif" alt="* *"  id="wanderer_image" /> </td>
+							<td> roams around, but might chase the player if it gets close! </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Charger </td>
+							<td> <img src="assets/icons/charger.gif" alt="'-'"  id="charger_image" /> </td>
+							<td> slowly roams around, but if a player gets in its sight then it charges forward! </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Crawler </td>
+							<td> <img src="assets/icons/crawler.gif" alt="<^>"  id="crawler_image" /> </td>
+							<td> moves about in a clockwise direction, avoiding collision when it can </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Warper </td>
+							<td> <img src="assets/icons/warper.gif" alt="=-="  id="warper_image" /> </td>
+							<td> teleports around the stage every so often, but doesnt move about otherwise </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Pusher </td>
+							<td> <img src="assets/icons/pusher.gif" alt="<->"  id="pusher_image" /> </td>
+							<td> doesnt out the player, but can push around boxes as it roams around </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Mimic </td>
+							<td> <img src="assets/icons/mimic1.gif" alt="[``]"  id="mimic1_image" /> </td>
+							<td> this tricky fellow looks like a box! It can be pushed around, but be warned! 
+								</br> Squish it between boxes and walls to rid of it 
+								</br> On mobile you can shake the device to temporarily reveal mimics
+							</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+						<tr>
+							<th> Misc </th>
+							<td> blank space </td>
+							<td> <img src="assets/icons/blank.gif" alt="---"  id="blank_image" /> </td>
+							<td> simply empty space, nothing's there... </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Box </td>
+							<td> <img src="assets/icons/box1.gif" alt="[-]"  id="box1_image" /> <img src="assets/icons/box2.gif" alt="[-]"  id="box2_image" /> <img src="assets/icons/box3.gif" alt="[-]"  id="box3_image" /> </td>
+							<td> a simple box. It can be pushed around and pulled. </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> Wall </td>
+							<td> <img src="assets/icons/wall.gif" alt="||||"  id="wall_image" /> </td>
+							<td> a simple wall. It can't be pushed or pulled. </td>
+						</tr>
+						<tr>
+							<th> &nbsp; </th>
+							<td> HP </td>
+							<td> <img src="assets/icons/hp.gif" alt="O" id="hp+_image" /> <img src="assets/icons/out.gif" alt="X" id="hp-_image" /> </td>
+							<td> you'll be defeated if you run out of HP! </td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div id="game_overlay" onclick="disableOverlay(this);" class="overlayBanner hidden">
+		<div id="banner_div">
+			<h1 id="banner_text"></h1>
+		</div>
+	</div> 
+</div>

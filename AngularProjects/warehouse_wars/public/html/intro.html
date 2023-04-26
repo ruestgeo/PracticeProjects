@@ -1,0 +1,29 @@
+
+
+
+<div id="intro_div" class="intro_div">
+    <label for="request_name">Display Name:</label><br>
+    <input type="text" id="request_name" placeholder="Enter display name here" required pattern="^[a-zA-Z0-9_ ]{3,20}$">
+    <input type="button" value="Submit" onclick="requestName();">
+
+    <script>
+        function loadName (){
+            let previousName = getCookie("WW_Java_DisplayName");
+            if (previousName == null) previousName = "";
+            $('#request_name').val(previousName);
+        }
+        $(loadName);
+        function requestName (){
+            if ( !(document.getElementById("request_name").validity.valid) ){ 
+                console.log("Invalid request_name ::   "+$("#request_name").val());
+                alert("Illegal display name");
+                return;
+            }
+            let id = getCookie("WW_Java_Id");
+            var jsonObj = {'type': "request_name", 'name':$('#request_name').val()};
+            if (id)   jsonObj["id"] = id;
+            console.log(jsonObj);
+            socket.send(JSON.stringify(jsonObj));
+        }
+    </script>
+</div>

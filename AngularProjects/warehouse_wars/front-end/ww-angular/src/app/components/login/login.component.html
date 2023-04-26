@@ -1,0 +1,30 @@
+
+<div id="intro_div" class="intro_div">
+    <form [formGroup]="loginForm" (ngSubmit)="login()"> 
+        <label for="request_name">Display Name:</label>
+        <div class="input-container">
+            <input type="text" formControlName="requestName" id="request_name" 
+            placeholder="Enter display name here">
+        <input type="submit" formControlName="loginSubmit">
+        </div>
+        <div *ngIf="invalidName" [innerText]="invalidNameMessage" class="invalid_input"></div>
+
+        <div formGroupName="colorGroup">
+            <label for="add_item_color">Color:</label>
+            <div class="input-container">
+                <select class='color-select' name="item_color" id="add_item_color" 
+                    formControlName="colorSelectControl"
+                    [ngStyle]="{'border-color': selectedColor}" 
+                    (change)="onColorSelect($event)">
+                    <option [value]="color.value" *ngFor="let color of colors" [innerHTML]="color.name"></option>
+                    <option [value]="color.value" *ngFor="let color of colorsObs | async" [innerHTML]="color.name"></option>
+                </select>
+                <input class='color-select' type="color" name="item_color_custom" id="add_item_color_custom" 
+                    formControlName="colorCustomControl"
+                    [value]="selectedColor" 
+                    (change)="onColorCustom($event)">
+            </div>
+        </div>
+    </form>
+</div>
+

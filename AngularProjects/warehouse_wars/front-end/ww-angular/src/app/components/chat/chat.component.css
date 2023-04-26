@@ -1,0 +1,83 @@
+
+.username {
+    font: arial;
+    padding: 10px 10px;
+}
+
+.chat {
+    border:4px groove black;
+    border-radius: 4px;
+}
+
+.chat-input:disabled {
+    background-color: slategray;
+}
+
+.chat-log {
+    border:1px solid black;
+    width:100%;
+    height:100px;
+    overflow: auto;
+    scroll-behavior: smooth;
+}
+
+.chat-log p {
+    border-radius: 2px;
+    border:1px solid black;
+}
+
+
+.chat-status-close {
+    background-image: url('src/assets/invalid.png'), url('../../../assets/invalid.png');
+    background-color: black;
+    background-position: 0 0, 0 0;
+    background-repeat: no-repeat, no-repeat;
+    color: white;
+}
+
+
+
+.chat-log-container {
+    border-radius: 1px;
+    border: 2px groove black;
+    justify-content: space-between;
+}
+.chat-log {
+    width: 100%;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.chat-entry {
+    width: 100%;
+    background-color: lightgray;
+}
+.chat-status {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    z-index: 999;
+    opacity: 0.70;
+    /*width: fit-content;
+    max-width: 20%;*/
+    width: 20%;
+    height: fit-content;
+    max-height: 30%;
+    overflow: scroll;
+    overflow-x: visible;
+    scrollbar-width: thin;
+}
+
+
+.chat-status::-webkit-scrollbar-track{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	background-color: #F5F5F5;
+    border-radius: 10px;
+}
+
+.chat-status::-webkit-scrollbar{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+
+.chat-status::-webkit-scrollbar-thumb{
+	background-color: #777777;
+}
