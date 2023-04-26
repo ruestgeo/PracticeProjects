@@ -1,0 +1,28 @@
+mvn compile
+mvn exec:java
+
+mvn clean
+
+mvn exec:java -D exec.mainClass="ruestgeo.test.server.websocket.JavaServer"
+mvn exec:java -D exec.mainClass="ruestgeo.test.server.socket.JavaServer"
+
+
+
+//  move  `./src/main/java/ruestgeo` into `./`  if using javac and java to compile and run
+
+javac -cp ".;jars/*" ruestgeo/test/server/socket/JavaServer.java
+javac -cp ".:jars/*" ruestgeo/test/server/socket/JavaServer.java
+java -cp ".;jars/*" ruestgeo/test/server/socket/JavaServer
+java -cp ".:jars/*" ruestgeo/test/server/socket/JavaServer
+
+javac -cp ".;jars/*" ruestgeo/test/server/websocket/JavaServer.java
+javac -cp ".:jars/*" ruestgeo/test/server/websocket/JavaServer.java
+java -cp ".;jars/*" ruestgeo/test/server/websocket/JavaServer
+java -cp ".:jars/*" ruestgeo/test/server/websocket/JavaServer
+
+
+
+
+
+
+

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test client</title>
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#eeeeee">
+		<meta name="theme-color" content="#eeeeee">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script language="javascript" src="client.js"></script>
+	</head>
+
+	<body>
+		<h1>My Website</h1>
+		<div id="main">
+			<p id="cookie"></p>
+			<p id="count"></p>
+			<img id="imagetest" src="assets/Jijae.png" >
+			<br>
+			<video id="intro_video" width=640 height= 480 >
+				<source src="assets/ForBiggerEscapes.mp4" type="video/mp4">
+				Your browser does not support the video tag.
+			</video> 
+		</div>
+	</body>
+</html>
+<script>
+	function getCookie(cname) {
+		var name = cname + "=";
+		var decodedCookie = decodeURIComponent(document.cookie);
+		var ca = decodedCookie.split(';');
+		for(var i = 0; i <ca.length; i++) {
+			var c = ca[i];
+			while (c.charAt(0) == ' ') {
+				c = c.substring(1);
+			}
+			if (c.indexOf(name) == 0) {
+				return c.substring(name.length, c.length);
+			}
+		}
+		return "";
+	}
+
+	function onReady(){
+		document.getElementById("cookie").innerHTML = getCookie("test");
+	}
+	//$(document).ready(onReady);
+	$(onReady);
+
+</script>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Warehouse Wars</title>
+		<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+		<link rel="manifest" href="/site.webmanifest">
+		<link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+		<meta name="msapplication-TileColor" content="#eeeeee">
+		<meta name="theme-color" content="#eeeeee">
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+		<script language="javascript" src="javascript/utils.js"></script>
+		<script language="javascript" src="javascript/controls.js"></script>
+		<script language="javascript" src="javascript/client.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
+	</head>
+
+	<body>
+		<noscript>
+			You need to enable JavaScript to run this app.
+		</noscript>
+		<script>
+			window.onload = function() {
+    			if (!window.jQuery) {
+					alert("An error occured when loading jQuery");
+					console.error("ERROR jQuery not loaded");
+					connectSocket = null;
+				}
+				else {
+					try{
+						$(connectSocket); //connectSocket();
+					}
+					catch (e){
+						$('connecting_intro').html('Failed to connect to server');
+					}
+				} 
+			}
+		</script>
+		<h1>Warehouse Wars</h1>
+		<div id="main" class="connecting">
+			<h3 id="connecting_intro">Connecting to game server...</h3>
+		</div>
+	</body>
+</html>
+
