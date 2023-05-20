@@ -242,7 +242,7 @@ public class GameRoomConfigs {
                 weights = configs.get("randomMobWeights");
             }
             catch (Exception e){
-                weights = JsonFactory.create();
+                weights = JsonFactory.createObject();
             }
             try{
                 temp.put("Bouncer", (weights.has("Bouncer") ? weights.get("Bouncer").getAsShort() : val) );
@@ -313,7 +313,7 @@ public class GameRoomConfigs {
                 amounts = configs.get("fixedMobAmounts");
             }
             catch (Exception e){
-                amounts = JsonFactory.create();
+                amounts = JsonFactory.createObject();
             }
             try{
                 temp.put("Bouncer", (amounts.has("numBouncers") ? amounts.get("numBouncers").getAsShort() : val) );

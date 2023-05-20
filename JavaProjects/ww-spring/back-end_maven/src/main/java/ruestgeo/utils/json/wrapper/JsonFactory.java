@@ -1,14 +1,12 @@
 package ruestgeo.utils.json.wrapper;
 
 //import ruestgeo.utils.json.wrapper.Jackson.JsonWrapper; //change this as needed
-import ruestgeo.utils.json.wrapper.Gson.JsonWrapper; //change this as needed
+import ruestgeo.utils.json.wrapper.Gson.JsonWrapper; 
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -158,7 +156,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json createObject (){
-        return new JsonWrapper(new HashMap<String,Json>());
+        return new JsonWrapper((Map<String,Json>) null);
     }
 
     
@@ -166,7 +164,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json createArray (){
-        return new JsonWrapper(new ArrayList<Json>());
+        return new JsonWrapper((List<Json>) null);
     }
 
     

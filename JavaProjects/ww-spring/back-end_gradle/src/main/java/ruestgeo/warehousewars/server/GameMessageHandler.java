@@ -27,7 +27,8 @@ public abstract class GameMessageHandler {
 
 
     public static void onClose (String sessionId, Json info){
-        System.out.println("vvv   Disconnected game client   vvv\n  session id:  "+sessionId);
+        System.out.println("vvv   Disconnected game client   vvv\n  session id:  "+sessionId
+        + ((info == null) ? "" : "\n  "+info.toString()) );
         GameManager.getGlobalManager().removePlayerSession(sessionId);
     }
 

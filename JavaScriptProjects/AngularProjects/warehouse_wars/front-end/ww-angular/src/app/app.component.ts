@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { ClientService } from 'src/app/services/game/client/client.service';
+import { WebConfigsService } from './services/web-configs.service';
 
 
 
@@ -28,7 +29,8 @@ export class AppComponent implements OnInit, OnDestroy {
 
 
 
-  constructor (private client: ClientService, private router: Router){}
+  constructor (private client: ClientService, private router: Router, 
+    private configs: WebConfigsService){}
 
 
 
@@ -76,7 +78,11 @@ export class AppComponent implements OnInit, OnDestroy {
 
     this.state = AppState.connecting;
     this.client.onWaiting();
-    this.connect();
+    
+    this.configs.observable.subscribe({
+      complete: () => this.connect()
+    });
+    
   }
 }
 

@@ -78,48 +78,78 @@ public class JsonWrapper implements Json {
 
 
     public JsonWrapper (Byte val) {
-        this.node = JsonNodeFactory.instance.numberNode((Byte) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Byte) val);
     }
     public JsonWrapper (Short val) {
-        this.node = JsonNodeFactory.instance.numberNode((Short) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Short) val);
     }
     public JsonWrapper (Integer val) {
-        this.node = JsonNodeFactory.instance.numberNode((Integer) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Integer) val);
     }
     public JsonWrapper (Long val) {
-        this.node = JsonNodeFactory.instance.numberNode((Long) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Long) val);
     }
     public JsonWrapper (BigInteger val) {
-        this.node = JsonNodeFactory.instance.numberNode((BigInteger) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((BigInteger) val);
     }
     public JsonWrapper (Float val) {
-        this.node = JsonNodeFactory.instance.numberNode((Float) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Float) val);
     }
     public JsonWrapper (Double val) {
-        this.node = JsonNodeFactory.instance.numberNode((Double) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((Double) val);
     }
     public JsonWrapper (BigDecimal val) {
-        this.node = JsonNodeFactory.instance.numberNode((BigDecimal) val);
+        if (val == null)
+            this.node = JsonNodeFactory.instance.nullNode();
+        else
+            this.node = JsonNodeFactory.instance.numberNode((BigDecimal) val);
     }
 
 
     public JsonWrapper (List<Json> val) {
         ArrayNode node = objectMapper.createArrayNode();
-        for (Json json : val){
-            node.add(((JsonWrapper) json).getNode());
+        if (val != null){
+            for (Json json : val){
+                node.add(((JsonWrapper) json).getNode());
+            }
         }
+        
         this.node = node;
     }
 
 
     public JsonWrapper (Map<String,Json> val) {
         ObjectNode node = objectMapper.createObjectNode();
-        for (Entry<String,Json> entry : val.entrySet()){
-            node.set(
-                entry.getKey(), 
-                ((JsonWrapper) entry.getValue()).getNode() 
-            );
+        if (val != null){
+            for (Entry<String,Json> entry : val.entrySet()){
+                node.set(
+                    entry.getKey(), 
+                    ((JsonWrapper) entry.getValue()).getNode() 
+                );
+            }
         }
+        
         this.node = node;
     }
 
@@ -852,7 +882,7 @@ public class JsonWrapper implements Json {
 
 
     public Json remove (Integer index) {
-        if (this.node.isObject()){
+        if (this.node.isArray()){
             if (index >= 0 && ((ArrayNode) this.node).size() > index ){
                 JsonNode removed = ((ArrayNode) this.node).remove(index);
                 //if (removed == null)  return null;

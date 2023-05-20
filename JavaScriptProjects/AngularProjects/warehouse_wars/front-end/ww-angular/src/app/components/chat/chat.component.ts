@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2, ComponentRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, Renderer2, ComponentRef, AfterViewChecked } from '@angular/core';
 import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 
 
@@ -35,7 +35,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", dateOptions);
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit, OnDestroy, FocusElement {
+export class ChatComponent implements OnInit, OnDestroy, AfterViewChecked, FocusElement {
   @ViewChild('chatlog') logDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('chatStatus') statusDiv!: ElementRef<HTMLDivElement>;
   @ViewChild(ChatStatusDirective, {static: true}) statusHost!: ChatStatusDirective;
@@ -44,6 +44,7 @@ export class ChatComponent implements OnInit, OnDestroy, FocusElement {
 
   serviceEnabled: boolean;
   autoScroll: boolean = true;
+  checkScroll: boolean = false;
   chatQueue: HTMLElement[] = [];
 
   focus: boolean = false;
@@ -71,6 +72,16 @@ export class ChatComponent implements OnInit, OnDestroy, FocusElement {
     });
 
     this.serviceEnabled = this.chatService.enabled;
+  }
+
+
+  
+  ngAfterViewChecked(): void {
+    if (this.autoScroll && this.checkScroll){
+      this.renderer.setProperty(this.logDiv.nativeElement, 'scrollTop', this.logDiv.nativeElement.scrollHeight);
+      this.checkScroll = false;
+    }
+      
   }
 
 
@@ -207,7 +218,7 @@ export class ChatComponent implements OnInit, OnDestroy, FocusElement {
     entryComponent.setInput('html', chatElem.html.outerHTML);
     if (chatElem.options?.token)   entryComponent.setInput('token', chatElem.options?.token ?? null);
     if (chatElem.options?.style)   entryComponent.setInput('style', chatElem.options?.style ?? '');
-    if (chatElem.options?.class)   entryComponent.setInput('classes', chatElem.options?.class ?? []);
+    if (chatElem.options?.class)   entryComponent.setInput('classes', chatElem.options?.class ?? ['chat-entry']);
 
     //let idx = this.logHost.viewContainerRef.indexOf(entryComponent.hostView);
     //if (idx > 0)   this.logHost.viewContainerRef.remove(idx);
@@ -278,8 +289,10 @@ export class ChatComponent implements OnInit, OnDestroy, FocusElement {
   receiveMessage (chatElem: ChatElement): void {
     this.createChatEntry(chatElem);
     
-    if (this.autoScroll)
-      this.renderer.setProperty(this.logDiv.nativeElement, 'scrollTop', this.logDiv.nativeElement.scrollHeight);
+    //this seems to be updating before the chat element is added, so it was moved to afterViewCheck
+    //if (this.autoScroll)
+    //  this.renderer.setProperty(this.logDiv.nativeElement, 'scrollTop', this.logDiv.nativeElement.scrollHeight);
+    this.checkScroll = true;
   }
 
 

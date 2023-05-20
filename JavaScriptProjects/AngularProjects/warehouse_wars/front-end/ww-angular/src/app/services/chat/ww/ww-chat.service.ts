@@ -17,13 +17,13 @@ import { ChatPackage } from "src/app/services/chat/common/ChatPackage";
 //import { ChatState } from 'src/app/services/chat/common/ChatState';
 import { DeliveryState } from 'src/app/services/chat/common/delivery-state';
 
+import { WebConfigsService } from 'src/app/services/web-configs.service';
+//import configs from 'src/assets/configs/configs.json'
 
-import configs from 'src/assets/configs/configs.json'
 
 
-
-const addr = configs.address === "0.0.0.0" ? "localhost" : configs.address;
-const port = configs.port;
+//const addr = configs.address === "0.0.0.0" ? "localhost" : configs.address;
+//const port = configs.port;
 
 const TOKEN_WAIT_TIME = 60; //seconds
 
@@ -57,12 +57,15 @@ export class WwChatService extends ChatService {
 
   constructor(private packager: ChatPackagerInterface, 
     protected override user: UserProfile /*injected as WWUserProfile*/,
-    @Inject(DEFAULT_RENDERER) protected override renderer: Renderer2) 
+    @Inject(DEFAULT_RENDERER) protected override renderer: Renderer2,
+    private configs: WebConfigsService) 
   {
     super(renderer, user);
 
-    this.connect();
-    //this.init(); 
+    //this.connect();
+    this.configs.observable.subscribe({
+      complete: () => this.connect()
+    });
   }
 
 
@@ -74,7 +77,7 @@ export class WwChatService extends ChatService {
 
 
   override connect (){
-    let url = `ws://${addr}:${parseInt(port)}/chat`; //`ws://${addr}:${parseInt(port)+1}/chat`;
+    let url = `ws://${this.configs.address}:${this.configs.port}/chat`; //`ws://${addr}:${parseInt(port)+1}/chat`;
     console.log(`connecting to:  `+url);
     this.socket = webSocket({
       url: url,
@@ -201,6 +204,7 @@ export class WwChatService extends ChatService {
       options['timestamp'] = pack.timestamp;
     if (pack.user && pack.user.color)
       options.style = `border-color: ${pack.user.color}`;
+    options.class = ["chat-entry"];
     if (Object.keys(options).length > 0)
       chatElem.options = options;
 

@@ -15,12 +15,13 @@ import { PathTravelGuard } from 'src/app/routing/guards/path-travel.guard';
 
 import { SpinnerOverlayService } from 'src/app/_sourcedMaterial/spinner/spinner-overlay.service';
 
-import configs from 'src/assets/configs/configs.json'
+import { WebConfigsService } from 'src/app/services/web-configs.service';
+//import configs from 'src/assets/configs/configs.json'
 
 
 
-const addr = configs.address === "0.0.0.0" ? "localhost" : configs.address;
-const port = configs.port;
+//const addr = configs.address === "0.0.0.0" ? "localhost" : configs.address;
+//const port = configs.port;
 
 
 
@@ -59,7 +60,8 @@ export class ClientService {
   
   constructor(private packager: GamePackager, private user: UserProfile /*injected as WWUserProfile*/, 
     @Inject(DEFAULT_RENDERER) protected renderer: Renderer2,  private cookieService:CookieService,
-    private guard:PathTravelGuard, private router: Router, private spinner: SpinnerOverlayService)
+    private guard:PathTravelGuard, private router: Router, private spinner: SpinnerOverlayService,
+    private configs: WebConfigsService)
   {
     guard.route.subscribe((pEnum) => {
       this.pathSubject.next(pEnum);
@@ -69,7 +71,7 @@ export class ClientService {
 
 
   connect (){
-    let url = `ws://${addr}:${parseInt(port)}/ww`; //`ws://${addr}:${parseInt(port)+1}/chat`;
+    let url = `ws://${this.configs.address}:${this.configs.port}/ww`; //`ws://${addr}:${parseInt(port)+1}/chat`;
     console.log(`connecting to:  `+url);
     this.socket = webSocket({
       url: url,

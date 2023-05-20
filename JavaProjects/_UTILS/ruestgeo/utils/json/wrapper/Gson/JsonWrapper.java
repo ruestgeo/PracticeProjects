@@ -111,8 +111,10 @@ public class JsonWrapper implements Json {
 
     public JsonWrapper (List<Json> val) {
         JsonArray array = new JsonArray(val.size());
-        for (Json json : val){
-            array.add(((JsonWrapper) json).getElement());
+        if (val != null){
+            for (Json json : val){
+                array.add(((JsonWrapper) json).getElement());
+            }
         }
         this.element = array;
     }
@@ -120,11 +122,13 @@ public class JsonWrapper implements Json {
 
     public JsonWrapper (Map<String,Json> val) {
         JsonObject object = new JsonObject();
-        for (Entry<String,Json> entry : val.entrySet()){
-            object.add(
-                entry.getKey(), 
-                ((JsonWrapper) entry.getValue()).getElement() 
-            );
+        if (val != null){
+            for (Entry<String,Json> entry : val.entrySet()){
+                object.add(
+                    entry.getKey(), 
+                    ((JsonWrapper) entry.getValue()).getElement() 
+                );
+            }
         }
         this.element = object;
     }

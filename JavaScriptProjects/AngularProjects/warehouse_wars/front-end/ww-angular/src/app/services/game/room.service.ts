@@ -343,23 +343,11 @@ export class RoomService {
 
 
   partialUpdate (pack: RoomUpdate){
-    let newUpdateNum = pack.updateNum;
-    if ( (this.clientUpdateNum > newUpdateNum) && (newUpdateNum > 0) && (this.previousUpdateType != "full") ){ //dont update if new update seems older
-      this.requestUpdate();
-      return;
-    }
-    let updateGap = newUpdateNum - this.clientUpdateNum;
-    if ( updateGap > 1) 
-      this.missedUpdates += updateGap;
-    if ( this.missedUpdates > MISSED_UPDATE_TOLERANCE_AMOUNT ){ //if continue missing partial updates, then request a full update
-      this.requestUpdate();
-    }
-    this.clientUpdateNum = newUpdateNum;
-	  this.previousUpdateType = "partial";
+    this.checkUpdateNum(pack);
+
     for (let blank of pack.blanks){
       this.setImage(blank[0], blank[1], this.imgs['blank'], this.alts['blank'], 'blank');
     }
-
     this.removeActors(pack.removed.players, pack.removed.mobs, pack.removed.misc);
 	  this.updateActors(pack.updated.players, pack.updated.mobs, pack.updated.misc);
 
@@ -372,6 +360,24 @@ export class RoomService {
     if (hpLoss > 0){
       this.hp = Math.max(0, this.hp - hpLoss);
       this.hpStatus = this.hpStatus.map((_, index) => index < this.hp);
+    }
+  }
+
+
+
+  private checkUpdateNum (pack: RoomUpdate){
+    let newUpdateNum = pack.updateNum;
+    this.clientUpdateNum = newUpdateNum;
+	  this.previousUpdateType = "partial";
+    if ( (this.clientUpdateNum > newUpdateNum) ){ //force full update if received an older update or if num wrapped
+      this.requestUpdate();
+      return;
+    }
+    let updateGap = newUpdateNum - this.clientUpdateNum;
+    if ( updateGap > 0) 
+      this.missedUpdates += updateGap;
+    if ( this.missedUpdates > MISSED_UPDATE_TOLERANCE_AMOUNT ){ //if continue missing partial updates, then request a full update
+      this.requestUpdate();
     }
   }
 
@@ -482,6 +488,7 @@ export class RoomService {
 
   requestUpdate (){
     if (this.updateLock)  return;
+    if (this.previousUpdateType != "full")  return;
     let pack: RequestUpdate = {"type": "request_update", 'room_id': this.id, 'player_id': this.user.id};
     this.client.sendPackage(pack);
   }

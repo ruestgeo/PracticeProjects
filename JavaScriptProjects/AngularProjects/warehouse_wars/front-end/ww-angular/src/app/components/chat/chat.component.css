@@ -19,6 +19,7 @@
     height:100px;
     overflow: auto;
     scroll-behavior: smooth;
+    box-sizing: border-box;
 }
 
 .chat-log p {

@@ -219,7 +219,7 @@ public class GameRoom {
                 return;
             }
             //else broadcast the ready states to all players
-            Json broadcast = JsonFactory.create();
+            Json broadcast = JsonFactory.createObject();
             broadcast.set("type", "players_ready");
             broadcast.set("room_id", this.id);
             broadcast.set("players", this.playersReadyStateArray());
@@ -263,7 +263,7 @@ public class GameRoom {
     private Json playersReadyStateArray (){
         ArrayList<Json> playersReady = new ArrayList<Json>();
         for (Player p : this.players) {
-            Json playerInfo = JsonFactory.create();
+            Json playerInfo = JsonFactory.createObject();
             playerInfo.set("name", p.getName());
             playerInfo.set("id", p.getId());
             playerInfo.set("ready", p.isReady());
@@ -337,7 +337,7 @@ public class GameRoom {
         this.spawnWalls();
         this.updated.clear();
 
-        Json updateJson = JsonFactory.create();
+        Json updateJson = JsonFactory.createObject();
         updateJson.set("type", "room_init");
         updateJson.set("room_id", this.id);
         updateJson.set("room_name", this.name);
@@ -937,7 +937,7 @@ public class GameRoom {
                         p.notReady();
                     }
                     Json playersReady = this.playersReadyStateArray();
-                    Json response = JsonFactory.create();
+                    Json response = JsonFactory.createObject();
                     response.set("type", "players_ready");
                     response.set("room_id", this.id);
                     response.set("players", playersReady);
@@ -984,7 +984,7 @@ public class GameRoom {
      * @param reason the reason for removing all players
      */
     public void removeAllPlayers (String reason){
-        Json response = JsonFactory.create();
+        Json response = JsonFactory.createObject();
         response.set("type", "removed_from_room");
         response.set("reason", reason);
         this.gameloopLock.lock();
@@ -1040,12 +1040,12 @@ public class GameRoom {
      * @return the JSON string
      */
     protected Json allActorsToJson (boolean includeUnmovables){
-        Json json = JsonFactory.create();
+        Json json = JsonFactory.createObject();
         ArrayList<Json> playersArr = new ArrayList<Json>();
         ArrayList<Json> mobsArr = new ArrayList<Json>();
         ArrayList<Json> miscArr = new ArrayList<Json>();
         for (Player p : this.players){
-            Json actorJson = JsonFactory.create();
+            Json actorJson = JsonFactory.createObject();
             actorJson.set("name", p.getName());
             actorJson.set("id", p.getId());
             actorJson.set("out", p.isOut());
@@ -1055,14 +1055,14 @@ public class GameRoom {
             playersArr.add(actorJson);
         }
         for (Mob m : this.mobs){
-            Json actorJson = JsonFactory.create();
+            Json actorJson = JsonFactory.createObject();
             actorJson.set("class", m.getClass().getSimpleName());
             actorJson.set("pos", m.getPositionList());
             actorJson.set("dir", m.getDirectionList());
             mobsArr.add(actorJson);
         }
         for (Misc m : this.misc_movables){
-            Json actorJson = JsonFactory.create();
+            Json actorJson = JsonFactory.createObject();
             actorJson.set("class", m.getClass().getSimpleName());
             actorJson.set("pos", m.getPositionList());
             if ( Box.class.isInstance(m) )
@@ -1071,7 +1071,7 @@ public class GameRoom {
         }
         if ( includeUnmovables ){
             for (Misc m : this.misc_unmovables){
-                Json actorJson = JsonFactory.create();
+                Json actorJson = JsonFactory.createObject();
                 actorJson.set("class", m.getClass().getSimpleName());
                 actorJson.set("pos", m.getPositionList());
                 miscArr.add(actorJson);
@@ -1091,12 +1091,12 @@ public class GameRoom {
      * @return a JSON representation of that list of actors
      */
     protected Json listToJson (List<Actor> list){
-        Json json = JsonFactory.create();
+        Json json = JsonFactory.createObject();
         ArrayList<Json> playersArr = new ArrayList<Json>();
         ArrayList<Json> mobsArr = new ArrayList<Json>();
         ArrayList<Json> miscArr = new ArrayList<Json>();
         for (Actor actor : list){
-            Json actorJson = JsonFactory.create();
+            Json actorJson = JsonFactory.createObject();
             if ( Player.class.isInstance(actor) ){
                 Player p = (Player) actor;
                 actorJson.set("name", p.getName());
@@ -1215,7 +1215,7 @@ public class GameRoom {
      */
     public void update (){
         String json;
-        Json updateJson = JsonFactory.create();
+        Json updateJson = JsonFactory.createObject();
         Boolean updateFull = this.forceFullUpdate;
         this.updateNum++; //overflow will force full update
         
@@ -1289,7 +1289,7 @@ public class GameRoom {
                 }
                 if ( player == null )
                     return;
-                Json updateJson = JsonFactory.create();
+                Json updateJson = JsonFactory.createObject();
                 updateJson.set("type", "full_update");
                 updateJson.set("update", this.allActorsToJson(true));
                 updateJson.set("hp", this.currentHealthPoints);

@@ -26,7 +26,8 @@ public abstract class ChatMessageHandler {
 
 
     public static void onClose (String sessionId, Json info){
-        System.out.println("vvv   Disconnected chat client   vvv\n  session id:  "+sessionId+"\n  "+info.toString());
+        System.out.println("vvv   Disconnected chat client   vvv\n  session id:  "+sessionId
+        + ((info == null) ? "" : "\n  "+info.toString()) );
         ChatManager.getGlobalManager().removeMember(sessionId);
     }
 
