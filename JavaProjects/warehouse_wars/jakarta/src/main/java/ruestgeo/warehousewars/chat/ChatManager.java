@@ -3,7 +3,7 @@ package ruestgeo.warehousewars.chat;
 
 import ruestgeo.utils.json.wrapper.Json;
 import ruestgeo.utils.json.wrapper.JsonFactory;
-import ruestgeo.warehousewars.server.SessionManager;
+import ruestgeo.warehousewars.server.session.SessionManager;
 
 import java.util.Set;
 import java.util.Iterator;

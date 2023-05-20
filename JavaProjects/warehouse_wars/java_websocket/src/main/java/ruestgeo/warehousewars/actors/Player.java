@@ -4,7 +4,7 @@ package ruestgeo.warehousewars.actors;
 import ruestgeo.warehousewars.actors.misc.Wall;
 import ruestgeo.warehousewars.actors.mobs.Pusher;
 import ruestgeo.warehousewars.game.GameRoom;
-import ruestgeo.warehousewars.server.SessionManager;
+import ruestgeo.warehousewars.server.session.SessionManager;
 
 import java.util.Map;
 import java.util.HashMap;

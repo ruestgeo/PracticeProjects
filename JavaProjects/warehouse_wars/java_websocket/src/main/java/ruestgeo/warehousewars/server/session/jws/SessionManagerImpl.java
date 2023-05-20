@@ -1,7 +1,8 @@
-package ruestgeo.warehousewars.server.session.jakarta;
+package ruestgeo.warehousewars.server.session.jws;
 
 import ruestgeo.utils.json.wrapper.Json;
-import ruestgeo.warehousewars.server.SessionManager;
+import ruestgeo.utils.random.RandomString;
+import ruestgeo.warehousewars.server.session.SessionManager;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,26 +14,61 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.ReentrantLock;
 
-import jakarta.websocket.SendHandler;
-import jakarta.websocket.SendResult;
-import jakarta.websocket.Session;
+import org.java_websocket.WebSocket;
 
 
 
 
-public class SessionManagerWrapper extends SessionManager {
+
+
+public class SessionManagerImpl extends SessionManager {
 
     private final int CLEAN_INTERVAL = 30*60*1000;
     private final Timer cleanTimer;
 
-    private Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
+    private final String idPattern = ".????-";
+
+    private Map<String, WebSocket> sessions = new ConcurrentHashMap<String, WebSocket>();
     private ReentrantLock mutex = new ReentrantLock();
 
 
 
-    public SessionManagerWrapper (){
+    public SessionManagerImpl (){
         this.cleanTimer = new Timer();
         this.cleanTimer.schedule(new SessionManagerInterval(this), CLEAN_INTERVAL, CLEAN_INTERVAL);
+    }
+
+
+
+    public boolean exists (String sessionId){
+        return this.sessions.containsKey(sessionId);
+    }
+
+
+    public String generateId (){
+        return this.generateId(null, null);
+    }
+    public String generateId (String prefix){
+        return this.generateId(prefix, null);
+    }
+    public String generateId (String prefix, String suffix){
+        if (prefix == null)
+            prefix = "";
+        if (suffix == null)
+            suffix = "";
+        String rand = RandomString.generate(this.idPattern);
+        String id = prefix + rand + suffix;
+        int count = 0;
+        while (this.sessions.containsKey(id)){
+            if (count%10 == 0){
+                suffix += "*";
+            }
+            rand = RandomString.generate(this.idPattern);
+            id = prefix + rand + suffix;
+            count++;
+        }
+        System.out.println("generated: "+id);
+        return id;
     }
 
 
@@ -42,8 +78,8 @@ public class SessionManagerWrapper extends SessionManager {
     public void open(String sessionId, Object session) {
         try {
             mutex.lock();
-            if (session instanceof Session)
-                sessions.put(sessionId, (Session) session);
+            if (session instanceof WebSocket)
+                sessions.put(sessionId, (WebSocket) session);
         } finally {
             mutex.unlock();
         }
@@ -56,7 +92,9 @@ public class SessionManagerWrapper extends SessionManager {
             mutex.lock();
             if (sessions.containsKey(sessionId)){
                 sessions.remove(sessionId);
-                System.out.println("||  Session closed\n||      code: "+ code+"\n||      reason: "+reason);
+                System.out.println("||  Session closed\n||      code: "+ code
+                +"\n||      reason: "+reason
+                +"\n||      remote: "+((boolean) obj));
             }
         } finally {
             mutex.unlock();
@@ -68,8 +106,8 @@ public class SessionManagerWrapper extends SessionManager {
     public void clean() {
         try {
             mutex.lock();
-            for (Entry<String,Session> entry : sessions.entrySet()){
-                Session session = entry.getValue();
+            for (Entry<String,WebSocket> entry : sessions.entrySet()){
+                WebSocket session = entry.getValue();
                 if (!session.isOpen()){
                     sessions.remove(entry.getKey());
                 }
@@ -82,7 +120,7 @@ public class SessionManagerWrapper extends SessionManager {
 
 
     public boolean isOpen (String sessionId) {
-        Session session = sessions.get(sessionId);
+        WebSocket session = sessions.get(sessionId);
         if (session != null){
             return session.isOpen();
         }
@@ -96,13 +134,13 @@ public class SessionManagerWrapper extends SessionManager {
         send(sessionId, json.toString());
     }
     public void send (String sessionId, String message ) {
-        Session session = sessions.get(sessionId);
+        WebSocket session = sessions.get(sessionId);
         if (session != null){
-            try {
-                session.getAsyncRemote().sendText(message, new AsyncMessageHandler(session));
-            } catch (IllegalArgumentException e) {
-                System.err.println("Send Message error ::   "+e);
-                e.printStackTrace();
+            if (!session.isOpen()){
+                System.err.println("Send Message error ::   session["+sessionId+"] not open");
+            }
+            else {
+                session.send(message);
             }
         }
     }
@@ -124,13 +162,13 @@ public class SessionManagerWrapper extends SessionManager {
         sendSync(sessionId, json.toString());
     }
     public void sendSync (String sessionId, String message ) throws IOException {
-        Session session = sessions.get(sessionId);
+        WebSocket session = sessions.get(sessionId);
         if (session != null){
-            try {
-                session.getBasicRemote().sendText(message);
-            } catch (IllegalArgumentException e) {
-                System.err.println("Send Message error ::   "+e);
-                e.printStackTrace();
+            if (!session.isOpen()){
+                throw new IOException("Send Message error ::   session["+sessionId+"] not open");
+            }
+            else {
+                session.send(message);
             }
         }
     }
@@ -168,21 +206,6 @@ public class SessionManagerWrapper extends SessionManager {
         }
         public void run (){
             this.manager.clean();
-        }
-    }
-
-
-
-    protected class AsyncMessageHandler implements SendHandler {
-        Session session;
-        public AsyncMessageHandler (Session sess){
-            this.session = sess;
-        }
-        //@Override
-        public void onResult(SendResult result) {
-            if ( !result.isOK() ){
-                System.err.println("error sending async message to sess ["+session.getId()+"]\n"+result.getException());
-            }
         }
     }
 

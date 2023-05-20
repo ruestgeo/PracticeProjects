@@ -100,7 +100,7 @@ export class WwChatService extends ChatService {
         next: (e) => {
           this.clean();
           console.log(`Chat Websocket closed: ${e.code}\nwas clean? :  ${e.wasClean}\n${e.reason}`);
-          /*DEV*/ alert (`Chat Websocket closed: ${e.code}\nwas clean? :  ${e.wasClean}\n${e.reason}`);
+          /*DEV*/ //alert (`Chat Websocket closed: ${e.code}\nwas clean? :  ${e.wasClean}\n${e.reason}`);
         }
       }
     });

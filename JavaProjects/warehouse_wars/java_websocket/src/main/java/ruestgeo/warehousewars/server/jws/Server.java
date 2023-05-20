@@ -2,8 +2,8 @@ package ruestgeo.warehousewars.server.jws;
 
 import ruestgeo.utils.json.wrapper.Json;
 import ruestgeo.utils.json.wrapper.JsonFactory;
-import ruestgeo.warehousewars.server.SessionManager;
-import ruestgeo.warehousewars.server.session.jws.SessionManagerWrapper;
+import ruestgeo.warehousewars.server.session.SessionManager;
+import ruestgeo.warehousewars.server.session.jws.SessionManagerImpl;
 
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -80,12 +80,12 @@ public class Server extends WebSocketServer {
         String timestamp = Long.toString(new Date().getTime());
         if (conn.getResourceDescriptor().equals("/ww")){
             System.out.println("||  ww");
-            conn.setAttachment(((SessionManagerWrapper) SessionManager.get("ww")).generateId("ww",timestamp));
+            conn.setAttachment(((SessionManagerImpl) SessionManager.get("ww")).generateId("ww",timestamp));
             game.onOpen(conn);
         }
         else if (conn.getResourceDescriptor().equals("/chat")){
             System.out.println("||  chat");
-            conn.setAttachment(((SessionManagerWrapper) SessionManager.get("chat")).generateId("chat",timestamp));
+            conn.setAttachment(((SessionManagerImpl) SessionManager.get("chat")).generateId("chat",timestamp));
             chat.onOpen(conn);
         }
         System.out.println("|# "+conn.getAttachment());

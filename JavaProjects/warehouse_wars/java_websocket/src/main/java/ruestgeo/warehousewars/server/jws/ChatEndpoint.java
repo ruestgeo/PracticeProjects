@@ -1,7 +1,7 @@
 package ruestgeo.warehousewars.server.jws;
 
-import ruestgeo.warehousewars.server.SessionManager;
 import ruestgeo.warehousewars.server.ChatMessageHandler;
+import ruestgeo.warehousewars.server.session.SessionManager;
 import ruestgeo.utils.json.wrapper.Json;
 
 import org.java_websocket.WebSocket;

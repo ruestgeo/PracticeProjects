@@ -1,7 +1,7 @@
 package ruestgeo.utils.json.wrapper;
 
-//import ruestgeo.utils.json.wrapper.Jackson.JsonWrapper; //change this as needed
-import ruestgeo.utils.json.wrapper.Jackson.JsonWrapper; //change this as needed
+//import ruestgeo.utils.json.wrapper.Jackson.JsonImpl; //change this as needed
+import ruestgeo.utils.json.wrapper.Jackson.JsonImpl; //change this as needed
 
 import java.io.File;
 import java.io.IOException;
@@ -43,14 +43,14 @@ public class JsonFactory {
      * @throws IllegalArgumentException if an error was encountered when parsing the json string
      */
     public static Json parse (String json) throws IllegalArgumentException {
-        return JsonWrapper.parse(json);
+        return JsonImpl.parse(json);
     }
 
 
 
     /** Create a Json instance of an empty JSON object */
     public static Json create (){
-        return new JsonWrapper();
+        return new JsonImpl();
     }
 
 
@@ -59,7 +59,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (String value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -67,7 +67,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Boolean value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -75,7 +75,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Byte value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -83,7 +83,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Short value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -91,7 +91,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Integer value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -99,7 +99,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Long value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -107,7 +107,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (BigInteger value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -115,7 +115,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Float value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -123,7 +123,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Double value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -131,7 +131,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (BigDecimal value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -139,7 +139,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (List<Json> value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
     
@@ -147,7 +147,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json create (Map<String,Json> value){
-        return new JsonWrapper(value);
+        return new JsonImpl(value);
     }
 
 
@@ -156,7 +156,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json createObject (){
-        return new JsonWrapper((Map<String,Json>) null);
+        return new JsonImpl((Map<String,Json>) null);
     }
 
     
@@ -164,7 +164,7 @@ public class JsonFactory {
      * @return Json instance
      */
     public static Json createArray (){
-        return new JsonWrapper((List<Json>) null);
+        return new JsonImpl((List<Json>) null);
     }
 
     
@@ -174,7 +174,7 @@ public class JsonFactory {
      */
     public static Json read (File file){
         try {
-            return JsonWrapper.parse(file);
+            return JsonImpl.parse(file);
         } 
         catch (IOException e) {
             System.err.println(e);

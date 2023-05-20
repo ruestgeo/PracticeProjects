@@ -1,8 +1,8 @@
 package ruestgeo.warehousewars.server.jetty;
 
 
-import ruestgeo.warehousewars.server.SessionManager;
-import ruestgeo.warehousewars.server.session.jetty.SessionManagerWrapper;
+import ruestgeo.warehousewars.server.session.SessionManager;
+import ruestgeo.warehousewars.server.session.jetty.SessionManagerImpl;
 import ruestgeo.warehousewars.server.GameMessageHandler;
 import ruestgeo.utils.json.wrapper.Json;
 import ruestgeo.utils.json.wrapper.JsonFactory;
@@ -29,7 +29,7 @@ public class GameEndSession extends WebSocketAdapter {
         super.onWebSocketConnect(session); 
         //this.session = session;
         String timestamp = Long.toString(new Date().getTime());
-        this.sessionId = ((SessionManagerWrapper) SessionManager.get("ww")).generateId("ww", timestamp);
+        this.sessionId = ((SessionManagerImpl) SessionManager.get("ww")).generateId("ww", timestamp);
         SessionManager.get("ww").open(this.sessionId, session);
         GameMessageHandler.onOpen(this.sessionId);
     }

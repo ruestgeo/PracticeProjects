@@ -7,6 +7,7 @@ import ruestgeo.utils.json.wrapper.JsonFactory;
 import ruestgeo.warehousewars.game.GameManager;
 import ruestgeo.warehousewars.game.GameRoom;
 import ruestgeo.warehousewars.game.GameRoomConfigs;
+import ruestgeo.warehousewars.server.session.SessionManager;
 
 
 

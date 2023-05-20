@@ -1,7 +1,7 @@
 package ruestgeo.warehousewars.server.jetty;
 
-import ruestgeo.warehousewars.server.SessionManager;
-import ruestgeo.warehousewars.server.session.jetty.SessionManagerWrapper;
+import ruestgeo.warehousewars.server.session.SessionManager;
+import ruestgeo.warehousewars.server.session.jetty.SessionManagerImpl;
 import ruestgeo.warehousewars.server.ChatMessageHandler;
 import ruestgeo.utils.json.wrapper.Json;
 import ruestgeo.utils.json.wrapper.JsonFactory;
@@ -30,7 +30,7 @@ public class ChatEndSession extends WebSocketAdapter {
         super.onWebSocketConnect(session); 
         //this.session = session;
         String timestamp = Long.toString(new Date().getTime());
-        this.sessionId = ((SessionManagerWrapper) SessionManager.get("chat")).generateId("chat", timestamp);
+        this.sessionId = ((SessionManagerImpl) SessionManager.get("chat")).generateId("chat", timestamp);
         SessionManager.get("chat").open(this.sessionId, session);
         ChatMessageHandler.onOpen(this.sessionId);
     }

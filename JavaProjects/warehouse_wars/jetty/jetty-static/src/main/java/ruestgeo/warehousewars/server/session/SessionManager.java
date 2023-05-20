@@ -1,7 +1,7 @@
-package ruestgeo.warehousewars.server;
+package ruestgeo.warehousewars.server.session;
 
 import ruestgeo.utils.json.wrapper.Json;
-import ruestgeo.warehousewars.server.session.jakarta.SessionManagerWrapper;
+import ruestgeo.warehousewars.server.session.jetty.SessionManagerImpl;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -14,7 +14,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public abstract class SessionManager {
 
     /** A global instance of a SessionManager */
-    public static final SessionManager global = new SessionManagerWrapper();
+    public static final SessionManager global = new SessionManagerImpl();
     private static ReentrantLock mutex = new ReentrantLock();
 
 
@@ -34,7 +34,7 @@ public abstract class SessionManager {
                 return managers.get(name);
             }
             else {
-                SessionManager manager = new SessionManagerWrapper();
+                SessionManager manager = new SessionManagerImpl();
                 managers.put(name, manager);
                 return manager;
             }
@@ -53,7 +53,7 @@ public abstract class SessionManager {
         try {
             mutex.lock();
             if (!managers.containsKey(name)){
-                managers.put(name, new SessionManagerWrapper());
+                managers.put(name, new SessionManagerImpl());
             }
         }
         finally {
@@ -68,7 +68,7 @@ public abstract class SessionManager {
 
     /**
      * Registers a session to the session manager
-     * @param session An object of a Session, to be handled internally by the SessionManagerWrapper
+     * @param session An object of a Session, to be handled internally by the SessionManagerImpl
      */
     public abstract void open (String sessionId, Object session);
 

@@ -27,7 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * Abstraction of a JSON encoder/decoder via wrapper
  * - jackson
  */
-public class JsonWrapper implements Json {
+public class JsonImpl implements Json {
     private JsonNode node;
 
     static final ObjectMapper objectMapper = new ObjectMapper();
@@ -35,7 +35,7 @@ public class JsonWrapper implements Json {
 
     public static Json parse (String json) throws IllegalArgumentException {
         try {
-            return new JsonWrapper(objectMapper.readTree(json));
+            return new JsonImpl(objectMapper.readTree(json));
         } 
         catch (JsonProcessingException e) {
             throw new IllegalArgumentException(e.toString());
@@ -44,7 +44,7 @@ public class JsonWrapper implements Json {
 
 
     public static Json parse (File file) throws IOException {
-        return new JsonWrapper(objectMapper.readTree(file));
+        return new JsonImpl(objectMapper.readTree(file));
     }
 
 
@@ -52,22 +52,22 @@ public class JsonWrapper implements Json {
 
 //#region constructor
 
-    private JsonWrapper (JsonNode val) {
+    private JsonImpl (JsonNode val) {
         this.node = val;
     }
 
 
     /** Create  */
-    public JsonWrapper () {
+    public JsonImpl () {
         this.node = objectMapper.createObjectNode();
     }
 
-    public JsonWrapper (String val) {
+    public JsonImpl (String val) {
         this.node = JsonNodeFactory.instance.textNode(val);
     }
 
 
-    public JsonWrapper (Boolean val) {
+    public JsonImpl (Boolean val) {
         if (val){
             this.node = BooleanNode.getTrue();
         }
@@ -77,49 +77,49 @@ public class JsonWrapper implements Json {
     }
 
 
-    public JsonWrapper (Byte val) {
+    public JsonImpl (Byte val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Byte) val);
     }
-    public JsonWrapper (Short val) {
+    public JsonImpl (Short val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Short) val);
     }
-    public JsonWrapper (Integer val) {
+    public JsonImpl (Integer val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Integer) val);
     }
-    public JsonWrapper (Long val) {
+    public JsonImpl (Long val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Long) val);
     }
-    public JsonWrapper (BigInteger val) {
+    public JsonImpl (BigInteger val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((BigInteger) val);
     }
-    public JsonWrapper (Float val) {
+    public JsonImpl (Float val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Float) val);
     }
-    public JsonWrapper (Double val) {
+    public JsonImpl (Double val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
             this.node = JsonNodeFactory.instance.numberNode((Double) val);
     }
-    public JsonWrapper (BigDecimal val) {
+    public JsonImpl (BigDecimal val) {
         if (val == null)
             this.node = JsonNodeFactory.instance.nullNode();
         else
@@ -127,11 +127,11 @@ public class JsonWrapper implements Json {
     }
 
 
-    public JsonWrapper (List<Json> val) {
+    public JsonImpl (List<Json> val) {
         ArrayNode node = objectMapper.createArrayNode();
         if (val != null){
             for (Json json : val){
-                node.add(((JsonWrapper) json).getNode());
+                node.add(((JsonImpl) json).getNode());
             }
         }
         
@@ -139,13 +139,13 @@ public class JsonWrapper implements Json {
     }
 
 
-    public JsonWrapper (Map<String,Json> val) {
+    public JsonImpl (Map<String,Json> val) {
         ObjectNode node = objectMapper.createObjectNode();
         if (val != null){
             for (Entry<String,Json> entry : val.entrySet()){
                 node.set(
                     entry.getKey(), 
-                    ((JsonWrapper) entry.getValue()).getNode() 
+                    ((JsonImpl) entry.getValue()).getNode() 
                 );
             }
         }
@@ -154,7 +154,7 @@ public class JsonWrapper implements Json {
     }
 
 
-    public JsonWrapper (File file) throws IOException {
+    public JsonImpl (File file) throws IOException {
         try {
             this.node = objectMapper.readTree(file);
         } 
@@ -175,7 +175,7 @@ public class JsonWrapper implements Json {
     public Json get (String key) {
         if (this.node.isObject()){
             if (this.node.has(key)){
-                return new JsonWrapper(this.node.get(key));
+                return new JsonImpl(this.node.get(key));
             }
             else {
                 //throw new IllegalArgumentException("JSON object does not contain key \""+key+"\"");
@@ -193,7 +193,7 @@ public class JsonWrapper implements Json {
     public Json get (Integer index) {
         if (this.node.isArray()){
             if (this.node.size() > index && index >= 0){
-                return new JsonWrapper(this.node.get(index));
+                return new JsonImpl(this.node.get(index));
             }
             else {
                 //throw new IllegalArgumentException("JSON array cannot index to ["+index+"]; Out-of-bounds");
@@ -445,9 +445,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Json value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, ((JsonWrapper) value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, ((JsonImpl) value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -456,9 +456,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, String value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -467,9 +467,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Boolean value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -478,9 +478,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Byte value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -489,9 +489,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Short value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -500,9 +500,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Integer value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -511,9 +511,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Long value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -522,9 +522,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, BigInteger value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -533,9 +533,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Float value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -544,9 +544,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Double value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -555,9 +555,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, BigDecimal value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -566,9 +566,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, List<Json> value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -577,9 +577,9 @@ public class JsonWrapper implements Json {
     public Json set (String key, Map<String,Json> value) {
         if (this.node.isObject()){
             JsonNode replaced = null;
-            replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper(value).getNode());
+            replaced = ((ObjectNode) this.node).replace(key, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -593,9 +593,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Json value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, ((JsonWrapper) value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, ((JsonImpl) value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -604,9 +604,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, String value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -615,9 +615,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Boolean value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -626,9 +626,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Byte value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -637,9 +637,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Short value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -648,9 +648,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Integer value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -659,9 +659,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Long value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -670,9 +670,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, BigInteger value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -681,9 +681,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Float value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -692,9 +692,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Double value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -703,9 +703,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, BigDecimal value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -714,9 +714,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, List<Json> value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -725,9 +725,9 @@ public class JsonWrapper implements Json {
     public Json set (Integer index, Map<String,Json> value) {
         if (this.node.isArray()){
             JsonNode replaced = null;
-            replaced = ((ArrayNode) this.node).set(index, new JsonWrapper(value).getNode());
+            replaced = ((ArrayNode) this.node).set(index, new JsonImpl(value).getNode());
             if (replaced == null)  return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else  return null;
     }
@@ -740,7 +740,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Json value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(((JsonWrapper) value).getNode());
+            ((ArrayNode) this.node).add(((JsonImpl) value).getNode());
             return this;
         }
         else  return null;
@@ -749,7 +749,7 @@ public class JsonWrapper implements Json {
 
     public Json add (String value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -758,7 +758,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Boolean value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -767,7 +767,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Byte value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -776,7 +776,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Short value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -785,7 +785,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Integer value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -794,7 +794,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Long value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -803,7 +803,7 @@ public class JsonWrapper implements Json {
 
     public Json add (BigInteger value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -812,7 +812,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Float value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -821,7 +821,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Double value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -830,7 +830,7 @@ public class JsonWrapper implements Json {
 
     public Json add (BigDecimal value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -839,7 +839,7 @@ public class JsonWrapper implements Json {
 
     public Json add (List<Json> value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -848,7 +848,7 @@ public class JsonWrapper implements Json {
 
     public Json add (Map<String,Json> value) {
         if (this.node.isArray()){
-            ((ArrayNode) this.node).add(new JsonWrapper(value).getNode());
+            ((ArrayNode) this.node).add(new JsonImpl(value).getNode());
             return this;
         }
         else  return null;
@@ -867,7 +867,7 @@ public class JsonWrapper implements Json {
             if (((ObjectNode) this.node).has(key)){
                 JsonNode removed = ((ObjectNode) this.node).remove(key);
                 //if (removed == null)  return null;
-                return new JsonWrapper(removed);
+                return new JsonImpl(removed);
             }
             else {
                 //throw new IllegalArgumentException("JSON object does not contain \""+key+"\"");
@@ -886,7 +886,7 @@ public class JsonWrapper implements Json {
             if (index >= 0 && ((ArrayNode) this.node).size() > index ){
                 JsonNode removed = ((ArrayNode) this.node).remove(index);
                 //if (removed == null)  return null;
-                return new JsonWrapper(removed);
+                return new JsonImpl(removed);
             }
             else {
                 //throw new IllegalArgumentException("JSON array cannot be indexed with ["+index+"]; out-of-bounds");
@@ -996,7 +996,7 @@ public Iterator<Json> iterator() {
                 }
                 else  {
                     this.removed = false;
-                    return new JsonWrapper(this.entry.getValue());
+                    return new JsonImpl(this.entry.getValue());
                 }
             }
     
@@ -1033,7 +1033,7 @@ public Iterator<Json> iterator() {
                 }
                 else {
                     this.removed = false;
-                    return new JsonWrapper(((ArrayNode) node).get(index++));
+                    return new JsonImpl(((ArrayNode) node).get(index++));
                 }
             }
     
@@ -1125,14 +1125,14 @@ public Iterator<Json> iterator() {
 //#region deprec
 
     /* @deprecated */
-    /*public JsonWrapper (List<?> val) throws IllegalArgumentException {
+    /*public JsonImpl (List<?> val) throws IllegalArgumentException {
         if (val == null){
             throw new IllegalArgumentException("Arg cannot be null");
         }
         try {
             if (val.stream().allMatch(Json.class::isInstance)){
                 this.node = objectMapper.readTree(objectMapper.writeValueAsString(
-                    ((List<JsonWrapper>) val).stream().map(json -> json.getNode())
+                    ((List<JsonImpl>) val).stream().map(json -> json.getNode())
                 ));
             }
             else if (Json.isValidJsonElement(val)){
@@ -1156,7 +1156,7 @@ public Iterator<Json> iterator() {
 
 
     /* @deprecated */
-    /*public JsonWrapper (Map<?,?> val) throws IllegalArgumentException {
+    /*public JsonImpl (Map<?,?> val) throws IllegalArgumentException {
         if (val == null){
             throw new IllegalArgumentException("Arg cannot be null");
         }
@@ -1167,7 +1167,7 @@ public Iterator<Json> iterator() {
                 }
                 else if (val.values().stream().allMatch(Json.class::isInstance)){
                     this.node = objectMapper.readTree(objectMapper.writeValueAsString(
-                        ((Map<String,JsonWrapper>) val).entrySet().stream()
+                        ((Map<String,JsonImpl>) val).entrySet().stream()
                         .collect(Collectors.toMap(Entry::getKey, entry -> entry.getValue().getNode() ))
                     ));
                 }
@@ -1203,40 +1203,40 @@ public Iterator<Json> iterator() {
             if (Json.isValidJsonElement(value)){
                 try {
                     if (value instanceof Json){
-                        replaced = ((ObjectNode) this.node).replace(key, ((JsonWrapper) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, ((JsonImpl) value).getNode());
                     }
                     else if (value instanceof JsonNode){
                         replaced = ((ObjectNode) this.node).replace(key, ((JsonNode) value));
                     }
                     else if (value instanceof String){
-                        replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper((String) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, new JsonImpl((String) value).getNode());
                     }
                     else if (value instanceof Boolean){
-                        replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper((Boolean) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, new JsonImpl((Boolean) value).getNode());
                     }
                     else if (value instanceof Number){
-                        replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper((Number) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, new JsonImpl((Number) value).getNode());
                     }
                     else if (value instanceof List){
-                        replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper((List<?>) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, new JsonImpl((List<?>) value).getNode());
                     }
                     else if (value instanceof Map){
-                        replaced = ((ObjectNode) this.node).replace(key, new JsonWrapper((Map<?,?>) value).getNode());
+                        replaced = ((ObjectNode) this.node).replace(key, new JsonImpl((Map<?,?>) value).getNode());
                     }
                 }
                 catch (IllegalArgumentException e) {
                     throw e;
                 }
             }
-            else if (value instanceof JsonWrapper){
-                replaced = ((ObjectNode) this.node).replace(key, ((JsonWrapper) value).getNode());
+            else if (value instanceof JsonImpl){
+                replaced = ((ObjectNode) this.node).replace(key, ((JsonImpl) value).getNode());
             }
             else {
                 throw new IllegalArgumentException("Second arg is not valid JSON element");
             }
             if (replaced == null)
                 return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else {
             throw new IllegalAccessException("JSON element is not an object");
@@ -1260,40 +1260,40 @@ public Iterator<Json> iterator() {
             if (Json.isValidJsonElement(value)){
                 try {
                     if (value instanceof Json){
-                        replaced = ((ArrayNode) this.node).set(index, ((JsonWrapper) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, ((JsonImpl) value).getNode());
                     }
                     else if (value instanceof JsonNode){
                         replaced = ((ArrayNode) this.node).set(index, ((JsonNode) value));
                     }
                     else if (value instanceof String){
-                        replaced = ((ArrayNode) this.node).set(index, new JsonWrapper((String) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, new JsonImpl((String) value).getNode());
                     }
                     else if (value instanceof Boolean){
-                        replaced = ((ArrayNode) this.node).set(index, new JsonWrapper((Boolean) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, new JsonImpl((Boolean) value).getNode());
                     }
                     else if (value instanceof Number){
-                        replaced = ((ArrayNode) this.node).set(index, new JsonWrapper((Number) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, new JsonImpl((Number) value).getNode());
                     }
                     else if (value instanceof List){
-                        replaced = ((ArrayNode) this.node).set(index, new JsonWrapper((List<?>) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, new JsonImpl((List<?>) value).getNode());
                     }
                     else if (value instanceof Map){
-                        replaced = ((ArrayNode) this.node).set(index, new JsonWrapper((Map<?,?>) value).getNode());
+                        replaced = ((ArrayNode) this.node).set(index, new JsonImpl((Map<?,?>) value).getNode());
                     }
                 }
                 catch (IllegalArgumentException e) {
                     throw e;
                 }
             }
-            else if (value instanceof JsonWrapper){
-                replaced = ((ArrayNode) this.node).set(index, ((JsonWrapper) value).getNode());
+            else if (value instanceof JsonImpl){
+                replaced = ((ArrayNode) this.node).set(index, ((JsonImpl) value).getNode());
             }
             else {
                 throw new IllegalArgumentException("Second arg is not valid JSON element");
             }
             if (replaced == null)
                 return null;
-            return new JsonWrapper(replaced);
+            return new JsonImpl(replaced);
         }
         else {
             throw new IllegalAccessException("JSON element is not an array");
@@ -1314,33 +1314,33 @@ public Iterator<Json> iterator() {
             if (Json.isValidJsonElement(value)){
                 try {
                     if (value instanceof Json){
-                        ((ArrayNode) this.node).add(((JsonWrapper) value).getNode());
+                        ((ArrayNode) this.node).add(((JsonImpl) value).getNode());
                     }
                     else if (value instanceof JsonNode){
                         ((ArrayNode) this.node).add(((JsonNode) value));
                     }
                     else if (value instanceof String){
-                        ((ArrayNode) this.node).add(new JsonWrapper((String) value).getNode());
+                        ((ArrayNode) this.node).add(new JsonImpl((String) value).getNode());
                     }
                     else if (value instanceof Boolean){
-                        ((ArrayNode) this.node).add(new JsonWrapper((Boolean) value).getNode());
+                        ((ArrayNode) this.node).add(new JsonImpl((Boolean) value).getNode());
                     }
                     else if (value instanceof Number){
-                        ((ArrayNode) this.node).add(new JsonWrapper((Number) value).getNode());
+                        ((ArrayNode) this.node).add(new JsonImpl((Number) value).getNode());
                     }
                     else if (value instanceof List){
-                        ((ArrayNode) this.node).add(new JsonWrapper((List<?>) value).getNode());
+                        ((ArrayNode) this.node).add(new JsonImpl((List<?>) value).getNode());
                     }
                     else if (value instanceof Map){
-                        ((ArrayNode) this.node).add(new JsonWrapper((Map<?,?>) value).getNode());
+                        ((ArrayNode) this.node).add(new JsonImpl((Map<?,?>) value).getNode());
                     }
                 }
                 catch (IllegalArgumentException e) {
                     throw e;
                 }
             }
-            else if (value instanceof JsonWrapper){
-                ((ArrayNode) this.node).add(((JsonWrapper) value).getNode());
+            else if (value instanceof JsonImpl){
+                ((ArrayNode) this.node).add(((JsonImpl) value).getNode());
             }
             else {
                 throw new IllegalArgumentException("Second arg is not valid JSON element");

@@ -1,7 +1,7 @@
 package ruestgeo.warehousewars.server.session.jakarta;
 
 import ruestgeo.utils.json.wrapper.Json;
-import ruestgeo.warehousewars.server.SessionManager;
+import ruestgeo.warehousewars.server.session.SessionManager;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -20,7 +20,7 @@ import jakarta.websocket.Session;
 
 
 
-public class SessionManagerWrapper extends SessionManager {
+public class SessionManagerImpl extends SessionManager {
 
     private final int CLEAN_INTERVAL = 30*60*1000;
     private final Timer cleanTimer;
@@ -30,7 +30,7 @@ public class SessionManagerWrapper extends SessionManager {
 
 
 
-    public SessionManagerWrapper (){
+    public SessionManagerImpl (){
         this.cleanTimer = new Timer();
         this.cleanTimer.schedule(new SessionManagerInterval(this), CLEAN_INTERVAL, CLEAN_INTERVAL);
     }
