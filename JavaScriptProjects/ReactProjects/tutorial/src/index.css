@@ -1,0 +1,172 @@
+
+/*#region Traversy Media*/
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+}
+
+.container {
+  display:inline-block;
+  width: fit-content;
+  min-height: auto;
+  margin: 30px auto;
+  overflow: auto;
+  border: 1px solid steelblue;
+  padding: 30px;
+  border-radius: 5px;
+}
+.btn {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  text-decoration: none;
+  font-size: 15px;
+  font-family: inherit;
+}
+.btn:focus {
+  outline: none;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-block {
+  display: block;
+  width: 96%;
+}
+
+.form-control {
+  margin: 10px 0;
+}
+
+.form-control label {
+  display: block;
+}
+
+.form-control input {
+  width: 96%;
+  height: 40px;
+  margin: 5px;
+  padding: 3px 7px;
+  font-size: 17px;
+}
+
+.form-control-check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.form-control-check label {
+  flex: 1;
+}
+
+.form-control-check input {
+  flex: 2;
+  height: 20px;
+}
+
+/*#endregion Traversy*/
+
+
+
+
+
+
+
+.item {
+  background: #f4f4f4;
+  margin: 10px 2px;
+  padding: 5px;
+  /*cursor: pointer;*/
+  border: 5px groove;
+  border-radius: 8px;
+  border-color: #999999;
+
+  display: flex;
+  justify-content: space-between;
+}
+
+
+.item h3 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  
+  height: fit-content;
+}
+
+.highlight {
+  color: red;
+} 
+
+
+.grid-element {
+  display:inline-block;
+  width: fit-content;
+  min-height: auto;
+  overflow: auto;
+}
+
+
+.collapsible {
+  overflow: hidden;
+  display: inline-block;
+  width: 100%;
+}
+
+
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.center {
+  display:flex;
+  justify-content: center;
+}
+
+
+.add-form {
+  margin-bottom: 40px;
+}
+
+
+.color-select {
+  overflow:auto;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding: 0px 0px;
+  display:inline-block;
+}
+
+input.color-select {
+  width: 50px;
+  margin: 0px 0px;
+  display: flex;
+  float: left;
+}
+
+select.color-select {
+  border-radius: 4px;
+  border-width: 10px;
+}
+
+
+
+

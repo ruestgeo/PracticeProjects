@@ -1,0 +1,22 @@
+<div id="game_control_panel">
+    <table id="game_ctrl"> <!-- 🢀 🢂 🢁 🢃 🢄 🢅 🢆 🢇   pull: ⤟   push: ⭲   -->
+        <tr>
+            <td>&nbsp;</td> 
+            <td><img id="ctrl_n" class="control_button" src="assets/game/n.gif" alt="🢁" (click)="sendControl(dir.up)" /></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><img id="ctrl_w" class="control_button" src="assets/game/w.gif" alt="🢀" (click)="sendControl(dir.left)" /></td>
+            <td><img id="ctrl_shift" class="control_button" 
+                [src]="toggle ? onSrc : offSrc" 
+                [alt]="toggle ? onAlt : offAlt" 
+                (click)="specialActionToggle()" /></td>
+            <td><img id="ctrl_e" class="control_button" src="assets/game/e.gif" alt="🢂" (click)="sendControl(dir.right);" /></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+            <td><img id="ctrl_s" class="control_button" src="assets/game/s.gif" alt="🢃" (click)="sendControl(dir.down)" /></td>
+            <td>&nbsp;</td>
+        </tr>
+    </table>
+</div>

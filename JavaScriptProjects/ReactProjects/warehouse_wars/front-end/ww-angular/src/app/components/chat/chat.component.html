@@ -1,0 +1,24 @@
+<div class="chat">
+    <h3>Chat Console</h3>
+
+    <button (click)="reconnect()" *ngIf="!serviceEnabled">reconnect</button>
+    
+    <form [formGroup]="chatForm" (ngSubmit)="sendMessage()"> 
+        <label for="chat_input" [innerText]="username" class="username">---</label>
+        <input type="text" formControlName="chatText" class="chat-input" id="chat_input"
+            (focus)="onFocus()" 
+            (blur)="onBlur()" 
+            (keydown.enter)="sendMessage()">
+        <input type="submit" formControlName="chatSubmit">
+        <input type="button" formControlName="toggleScroll" (click)="toggleChatScroll();">
+    </form>
+    
+    <div class="chat-log-container">
+        <div class="chat-log" #chatlog>
+            <ng-template chatEntryDirective></ng-template>
+        </div>
+        <div class="chat-status" #chatStatus>
+            <ng-template chatStatusDirective></ng-template>
+        </div>
+    </div>
+</div>
