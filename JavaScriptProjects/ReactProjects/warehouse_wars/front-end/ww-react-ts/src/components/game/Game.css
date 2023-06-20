@@ -1,0 +1,149 @@
+.room-id {
+  font-style: arial;
+  padding: 20px 20px;
+}
+
+
+table.stage {
+  border: 0;
+  padding: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+tr.stage {
+  border: 0;
+  padding: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+td.stage {
+  border: 0;
+  padding: 0;
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+table.players {
+  border: 2px solid;
+  padding: 10px 10px;
+  margin: 10px 10px;
+  width: 100%
+}
+tr.players{
+  border: 1px solid;
+}
+td.players{
+  border: 1px solid;
+}
+td.name{
+  width: 10%;
+}
+td.ready-button{
+  width: 70%;
+}
+
+
+
+.playerId {
+  overflow-x: scroll;
+  color: gray;
+  width: 10ch;
+  height: 4ch;
+}
+
+
+
+.readyButton {
+  background-color: #555555;
+  text-align: center;
+  width: 100%;
+  padding: 10px 32px;
+  cursor: pointer;
+}
+.iReady {
+  border: 4px solid #4CAF50;
+  border-radius: 2px;
+  color: #4CAF50;
+}
+.iReady:active {
+  background-color: #777777;
+  border-style: groove;
+}
+.iNotReady {
+  border: 4px solid #f44336;
+  border-radius: 2px;
+  color: #f44336;
+}
+.iNotReady:active {
+  background-color: #777777;
+  border-style: groove;
+}
+.playerReady {
+  color: #4CAF50;
+  cursor: not-allowed;
+}
+.playerNotReady {
+  color: #f44336;
+  cursor: not-allowed;
+}
+
+
+
+
+
+.mob_n {
+  transform: rotate(-90deg) scaleX(-1);
+}
+.mob_ne {
+  transform: rotate(-45deg) scaleX(-1);
+}
+.mob_e {
+  transform: scaleX(-1);
+}
+.mob_se {
+  transform: rotate(45deg) scaleX(-1);
+}
+.mob_s {
+  transform: rotate(-90deg);
+}
+.mob_sw {
+  transform: rotate(-45deg);
+}
+/*.mob_w {  mob imgs face west by default
+}*/
+.mob_nw {
+  transform: rotate(45deg);
+}
+
+@keyframes flickerAnimation {
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-o-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-moz-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+@-webkit-keyframes flickerAnimation{
+  0%   { opacity:1; }
+  50%  { opacity:0; }
+  100% { opacity:1; }
+}
+.spawned {
+  -webkit-animation: flickerAnimation 1s infinite;
+  -moz-animation: flickerAnimation 1s infinite;
+  -o-animation: flickerAnimation 1s infinite;
+  animation: flickerAnimation 1s infinite;
+}
+

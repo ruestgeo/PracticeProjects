@@ -46,31 +46,21 @@ export interface PlayerReadyStatus {
     ready: boolean;
 }
 
-export interface EnterRoom extends GamePackage {
+export interface EnterRoomFull extends GamePackage {
     type: "enter_room";
-    room_name: string|null; //null on failure to join room, the props below are excluded
-    room_id?: string;
-    capacity?: number;
-    players?: PlayerReadyStatus[];
+    room_name: null; //null on failure to join room
 }
-export interface EnteredRoom extends EnterRoom {
+export interface EnterRoom extends GamePackage {
     type: "enter_room";
     room_name: string;
     room_id: string;
     capacity: number;
     players: PlayerReadyStatus[];
 }
-export function isEnterRoom (object: any): object is EnterRoom {
-    return typeof object === 'object' && object.type === "enter_room" && ((object.room_name === null) 
-    || (typeof object.room_name === "string" 
-        && typeof object.room_id === "string" 
-        && typeof object.capacity === "number" 
-        && Array.isArray(object.players) 
-        && object.players?.reduce( (acc: boolean,  next: PlayerReadyStatus ) => {
-            return acc && (typeof next?.id === "string" && typeof next?.name === "string" && typeof next?.ready === "boolean")
-        }, true)));
+export function isEnterRoomFull (object: any): object is EnterRoomFull {
+    return typeof object === 'object' && object.type === "enter_room" && object.room_name === null;
 }
-export function isEnteredRoom (object: any): object is EnteredRoom {
+export function isEnterRoom (object: any): object is EnterRoom {
     return typeof object === 'object' && object.type === "enter_room"
     && typeof object.room_name === "string" 
     && typeof object.room_id === "string" 
@@ -126,7 +116,7 @@ export interface MiscActor{
 
 
 
-export interface RoomInit extends GamePackage {
+export interface StageInit extends GamePackage {
     type: "room_init";
     room_id: string;
     room_name: string;
@@ -140,7 +130,7 @@ export interface RoomInit extends GamePackage {
         misc: MiscActor[];
     }
 }
-export function isRoomInit (object: any): object is RoomInit {
+export function isStageInit (object: any): object is StageInit {
     return typeof object === 'object' && object.type === "room_init"
     && typeof object.room_id === 'string' && typeof object.room_name === 'string'
     && typeof object.max_hp === 'number' && typeof object.updateNum === 'number'
@@ -151,7 +141,7 @@ export function isRoomInit (object: any): object is RoomInit {
 
 
 
-export interface RoomUpdate extends GamePackage {
+export interface StageUpdate extends GamePackage {
     type: "update";
     updateNum: number;
     blanks: [Coordinate];
@@ -166,7 +156,7 @@ export interface RoomUpdate extends GamePackage {
         misc: MiscActor[];
     }
 }
-export function isRoomUpdate (object: any): object is RoomUpdate {
+export function isStageUpdate (object: any): object is StageUpdate {
     return typeof object === 'object' && object.type === "update"
     && typeof object.updateNum === 'number' && Array.isArray(object.blanks)
     && object.blanks.reduce((acc:boolean, next:number[]) => {

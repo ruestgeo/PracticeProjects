@@ -41,7 +41,7 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   
   invalidUsernames: string[] = [];
-  currentPattern: string = `^((?!${this.invalidUsernames.join('|')}).)*$`;
+  currentPattern: string = `((?!^(${this.invalidUsernames.join('|')})$)[${this.validChars}]+)`;
   patternInvalidator = Validators.pattern(this.currentPattern);
 
   awaitingLogin: boolean = false;
@@ -92,7 +92,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.loginForm.controls['requestName'].updateValueAndValidity();
 
     if (this.loginForm.controls['requestName'].invalid && this.loginForm.controls['loginSubmit'].enabled)
-        this.disableSubmit();
+      this.loginForm.controls['loginSubmit'].disable();
 
 
     //component is destroyed on route change
@@ -120,9 +120,9 @@ export class LoginComponent implements OnInit, OnDestroy {
           this.invalidNameMessage = `${this.invalidMessage}\n${invalidLength ? '\n- invalid length ('+name.length+')' : ''}${invalidChars ? '\n- invalid characters:  '+chars.join('') : ''}`;
       }
       if (this.loginForm.controls['requestName'].invalid && this.loginForm.controls['loginSubmit'].enabled)
-        this.disableSubmit();
+        this.loginForm.controls['loginSubmit'].disable();
       else if (this.loginForm.controls['requestName'].valid && this.loginForm.controls['loginSubmit'].disabled)
-        this.enableSubmit();
+        this.loginForm.controls['loginSubmit'].enable();
     });
     this.subscriptions.push(subscription);
     
@@ -146,7 +146,7 @@ export class LoginComponent implements OnInit, OnDestroy {
           if (this.invalidUsernames.length > 0)
             this.loginForm.controls['requestName'].removeValidators(this.patternInvalidator);
           this.invalidUsernames.push(pack.name);
-          this.currentPattern = `^((?!${this.invalidUsernames.join('|')}).)*$`;
+          this.currentPattern = `((?!^(${this.invalidUsernames.join('|')})$)[${this.validChars}]+)`;
           console.log(`new invalidating pattern ::   ${this.currentPattern}`);
           this.patternInvalidator = Validators.pattern(this.currentPattern);
           this.loginForm.controls['requestName'].addValidators(this.patternInvalidator);
@@ -174,6 +174,10 @@ export class LoginComponent implements OnInit, OnDestroy {
       }
       else if(isErrorPackage(pack)){
         console.log(`error: ${pack.message}`);
+        this.awaitingLogin = false;
+        this.awaitToken = undefined;
+        this.enable();
+        this.client.onFinishedWaiting();
         alert(`An error occurred: ${pack.message}`);
       }
     });
@@ -196,19 +200,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   enable (){
     this.loginForm.controls['requestName'].enable();
-    this.enableSubmit();
+    this.loginForm.controls['loginSubmit'].enable();
   }
   disable () {
     this.loginForm.controls['requestName'].disable();
-    this.disableSubmit();
-  }
-
-  enableSubmit (){ 
-    this.loginForm.controls['loginSubmit'].enable();
-  }
-  disableSubmit (){ 
     this.loginForm.controls['loginSubmit'].disable();
   }
+
 
 
 
@@ -225,6 +223,7 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.client.onWaiting('Logging in...');
     this.loginTimeout = setTimeout((_this) => {
       _this.setDefaults();
+      _this.enable();
       _this.client.onFinishedWaiting();
       console.log('!! login time out'); 
       alert('Could not log in, request timed out!');

@@ -11,3 +11,5 @@ echo %port%
 
 
 REM cmd /k http-server -p %port% dist\ww-angular --proxy http://localhost:%port%?
+
+pause

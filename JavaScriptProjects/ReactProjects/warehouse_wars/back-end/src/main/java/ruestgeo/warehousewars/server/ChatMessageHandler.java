@@ -85,6 +85,9 @@ public abstract class ChatMessageHandler {
                     catch (IllegalArgumentException e){
                         response.set("type", "error");
                         response.set("message", e.toString());
+                        System.err.println(e.toString());
+                        System.err.println(e.getMessage());
+                        e.printStackTrace();
                         return;
                     }
                     response = null; //broadcast handled by chatmanager

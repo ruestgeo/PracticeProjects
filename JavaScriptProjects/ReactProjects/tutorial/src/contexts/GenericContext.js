@@ -25,7 +25,7 @@ export const GenericContext = React.createContext({});
 //props.children is a handle for inner HTML elements, in this case anything inner to the GenericProvider component
 
 /**
- * Create a component providing value to a generic context
+ * Create a component providing properties to a generic context
  * @param {*} props properties of the component
  * @returns html component
  */

@@ -9,7 +9,6 @@ import { AppComponent } from './app.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { LoginComponent } from './components/login/login.component';
 import { LobbyComponent } from './components/lobby/lobby.component';
-import { WaitingRoomComponent } from './components/waiting-room/waiting-room.component';
 import { GameComponent } from './components/game/game.component';
 import { ChatStatusInfoComponent } from './components/chat/chat-status-info/chat-status-info.component';
 import { ChatEntryComponent } from './components/chat/chat-entry/chat-entry.component';
@@ -41,7 +40,6 @@ import { GameStageComponent } from './components/game/game-stage/game-stage.comp
     ChatComponent,
     LoginComponent,
     LobbyComponent,
-    WaitingRoomComponent,
     GameComponent,
     ChatStatusInfoComponent,
     ChatEntryComponent,

@@ -8,7 +8,7 @@ import { DEFAULT_RENDERER } from 'src/app/injectionTokens/Renderer2';
 import { ChatService } from 'src/app/services/chat/common/chat.service';
 import { ChatPackagerInterface } from "src/app/services/chat/common/ChatPackagerInterface";
 import { ChatElement, ChatElementOptions } from 'src/app/services/chat/common/ChatElement';
-import { isWWChatFetchMessagesDone, isWWChatFetchTokenDone, isWWChatInfoReceived, isWWChatPackage, isWWChatReceived, isWWChatToken, WWChatPackage, WWChatReceived } from 'src/app/services/chat/ww/WWChatPackage';
+import { isWWChatFetchMessagesDone, isWWChatFetchTokenDone, isWWChatInfoReceived, isWWChatPackage, isWWChatReceived, isWWChatToken, WWChatError, WWChatPackage, WWChatReceived } from 'src/app/services/chat/ww/WWChatPackage';
 //import { UniqueIdService } from 'src/app/services/util/uid/unique-id.service';
 import { awaitOrTimeout } from 'src/app/utils/AwaitTimeout';
 
@@ -256,7 +256,7 @@ export class WwChatService extends ChatService {
     console.log(`Received socket package type :  ${pack.type}`);
     switch (pack.type){
       case 'error': {  /*{type:'error', message: string}*/    
-        this.stateSubject.next({state: DeliveryState.complete, enabled: true, message: 'Message sent'});
+        this.stateSubject.next({state: DeliveryState.complete, enabled: true, message: (pack as WWChatError).message});
         break;
       }
       case 'info': {  /*{type: 'info', max_updateNum: number, queue_limit: number, current_updateNum: number}*/

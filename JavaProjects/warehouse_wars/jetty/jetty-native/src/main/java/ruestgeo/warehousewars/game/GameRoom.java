@@ -756,7 +756,7 @@ public class GameRoom {
         //System.out.println("numRandomMobs "+this.configs.numRandomMobs);
         for ( int mobNum = 0;  mobNum < this.configs.numRandomMobs;  mobNum++ ){
             String randomMobType = randomPicker.getRandom();
-            //System.out.println(randomMobType);
+            System.out.println(randomMobType);
             short[] pos;
             short[] dir = this.createDirection();
             //System.out.println("    dir "+dir[0]+", "+dir[1]);

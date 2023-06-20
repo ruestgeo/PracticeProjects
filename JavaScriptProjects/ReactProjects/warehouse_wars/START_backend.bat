@@ -1,4 +1,4 @@
 
 cd back-end
-cmd /k mvn compile && mvn exec:java
+cmd /c mvn compile && mvn exec:java
 PAUSE

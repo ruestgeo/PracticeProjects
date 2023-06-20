@@ -168,6 +168,15 @@ export class GameComponent implements OnInit, OnDestroy {
     this.room.specialAction = false;
   }
 
+
+
+  @HostListener('document:keydown.m', ['$event'])
+  @HostListener('document:keydown.shift.m', ['$event'])
+  mimicReveal (event: KeyboardEvent){ 
+    console.log('mimic reveal key press');
+    this.room.mimicReveal(); 
+  }
+
   //#endregion keyControl
 }
 

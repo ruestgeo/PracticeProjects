@@ -33,13 +33,13 @@ export interface RoomConfigs {
         Warper: number;
     }
     fixedMobAmounts: {
-        numBouncer: number;
-        numCharger: number;
-        numCrawler: number;
-        numMimic: number;
-        numPusher: number;
-        numWanderer: number;
-        numWarper: number;
+        numBouncers: number;
+        numChargers: number;
+        numCrawlers: number;
+        numMimics: number;
+        numPushers: number;
+        numWanderers: number;
+        numWarpers: number;
     }
 }
 

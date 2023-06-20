@@ -307,6 +307,7 @@ public class GameRoomConfigs {
 
         temp = new HashMap<String, Integer>();
         val = GameRoomConfigs.DEFAULT_NUM_FIXED_MOB;
+        //System.out.println("configs has fixedMobAmounts: "+configs.has("fixedMobAmounts"));
         if ( configs.has("fixedMobAmounts") ){
             Json amounts;
             try {
@@ -315,47 +316,55 @@ public class GameRoomConfigs {
             catch (Exception e){
                 amounts = JsonFactory.createObject();
             }
+            //System.out.println("amounts ::  "+amounts.toString());
+            //System.out.println("configs has numBouncers: "+amounts.has("numBouncers"));
             try{
                 temp.put("Bouncer", (amounts.has("numBouncers") ? amounts.get("numBouncers").getAsShort() : val) );
             }
             catch (Exception e){
                 temp.put("Bouncer", val);
             }
-            try{
-                temp.put("Pusher", (amounts.has("numPushers") ? amounts.get("numPushers").getAsShort() : val) );
-            }
-            catch (Exception e){
-                temp.put("Pusher", val);
-            }
-            try{
-                temp.put("Wanderer", (amounts.has("numWanderers") ? amounts.get("numWanderers").getAsShort() : val) );
-            }
-            catch (Exception e){
-                temp.put("Wanderer", val);
-            }
+            //System.out.println("configs has numChargers: "+amounts.has("numChargers"));
             try{
                 temp.put("Charger", (amounts.has("numChargers") ? amounts.get("numChargers").getAsShort() : val) );
             }
             catch (Exception e){
                 temp.put("Charger", val);
             }
+            //System.out.println("configs has numCrawlers: "+amounts.has("numCrawlers"));
             try{
                 temp.put("Crawler", (amounts.has("numCrawlers") ? amounts.get("numCrawlers").getAsShort() : val) );
             }
             catch (Exception e){
                 temp.put("Crawler", val);
             }
+            //System.out.println("configs has numPushers: "+amounts.has("numPushers"));
             try{
-                temp.put("Warper", (amounts.has("numWarpers") ? amounts.get("numWarpers").getAsShort() : val) );
+                temp.put("Pusher", (amounts.has("numPushers") ? amounts.get("numPushers").getAsShort() : val) );
             }
             catch (Exception e){
-                temp.put("Warper", val);
+                temp.put("Pusher", val);
             }
+            //System.out.println("configs has numMimics: "+amounts.has("numMimics"));
             try{
                 temp.put("Mimic", (amounts.has("numMimics") ? amounts.get("numMimics").getAsShort() : val) );
             }
             catch (Exception e){
                 temp.put("Mimic", val);
+            }
+            //System.out.println("configs has numWanderers: "+amounts.has("numWanderers"));
+            try{
+                temp.put("Wanderer", (amounts.has("numWanderers") ? amounts.get("numWanderers").getAsShort() : val) );
+            }
+            catch (Exception e){
+                temp.put("Wanderer", val);
+            }
+            //System.out.println("configs has numWarpers: "+amounts.has("numWarpers"));
+            try{
+                temp.put("Warper", (amounts.has("numWarpers") ? amounts.get("numWarpers").getAsShort() : val) );
+            }
+            catch (Exception e){
+                temp.put("Warper", val);
             }
             this.fixedMobAmounts = Collections.unmodifiableMap(temp);
         }
@@ -369,6 +378,7 @@ public class GameRoomConfigs {
             temp.put("numMimics",val);
             this.fixedMobAmounts = Collections.unmodifiableMap(temp);
         }
+        //System.out.println("fixedMobAmounts ::  "+this.fixedMobAmounts.toString());
 
         
 

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 
 import { ClientService } from 'src/app/services/game/client/client.service';
-import { isEnterRoom, isErrorPackage } from 'src/app/types/ClientReceive';
+import { GamePackage, isEnterRoom, isEnterRoomFull, isErrorPackage } from 'src/app/types/ClientReceive';
 import { CreateRoom, JoinRoom, LeaveRoom, RoomConfigs } from 'src/app/types/ClientSend';
 import { WWUserProfile } from 'src/app/types/WWUser';
 import { UserProfile } from 'src/app/types/User';
@@ -103,7 +103,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
   randomMin = 0;
   randomMax = 0; //updated dynamically
 
-  weightMax = 1000;
+  weightMax = 100;
 
   bouncerMax = 0; //updated dynamically
   chargerMax = 0; //updated dynamically
@@ -284,14 +284,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.room.handlePack(pack);
         this.router.navigate(['game']);
       }
+      else if (isEnterRoomFull(pack)){
+        console.log(`roomFull: ${pack.token}`);
+        this.finishWaiting(pack);
+        alert(`Room is full`);
+      }
       else if(isErrorPackage(pack)){
         console.log(`error: ${pack.message}`);
-        if (pack.hasOwnProperty('token') && pack.token === this.awaitToken){
-          this.awaitToken = undefined;
-          if (this.joinTimeout) clearTimeout(this.joinTimeout);
-          this.joinTimeout = null;
-          this.client.onFinishedWaiting();
-        }
+        this.finishWaiting(pack);
         alert(`An error occurred: ${pack.message}`);
       }
     });
@@ -384,7 +384,38 @@ export class LobbyComponent implements OnInit, OnDestroy {
     this.fixedMobsVisible = false;
   }
 
-  lockButtons (){
+
+  finishWaiting (pack: GamePackage){
+    if (pack.hasOwnProperty('token') && pack.token === this.awaitToken){
+      this.awaitToken = undefined;
+      if (this.joinTimeout) 
+        clearTimeout(this.joinTimeout);
+      this.joinTimeout = null;
+      if (this.configsLock)
+        this.unlockConfigs();
+      if (this.buttonLock)
+        this.unlockButtons();
+      this.buttonLock = false;
+      this.configsLock = false;
+      this.configsVisible = false;
+      this.awaitingJoin = false;
+      this.awaitToken = undefined;
+      if (this.joinForm.get(['joinId'])?.valid)
+        this.joinForm.get(['joinSubmit'])?.enable();
+      else
+        this.joinForm.get(['joinSubmit'])?.disable();
+      this.checkConfigValidity();
+      if (this.configInvalids.length === 0)
+        this.configsForm.get(['configsSubmit'])?.enable();
+      else
+        this.configsForm.get(['configsSubmit'])?.disable();
+      this.client.onFinishedWaiting();
+    }
+  }
+
+
+
+  lockButtons (){ //TODO remove these and micro manage;  also lock input as necessary
     this.buttonLock = true;
     this.joinForm.get(['joinSubmit'])?.disable();
     this.configsForm.get(['configsSubmit'])?.disable();
@@ -968,13 +999,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
     let weightWanderers = this.configsForm.get(['configsGroup','randomGroup','wandererWeight'] as const)?.value;
     let weightWarpers =   this.configsForm.get(['configsGroup','randomGroup','warperWeight'] as const)?.value;
     let totalWeight = weightBouncers + weightChargers + weightCrawlers + weightMimics + weightPushers + weightWanderers + weightWarpers;
-    this.bouncerChance = `${(weightBouncers / totalWeight).toFixed(2)}% ( ${weightBouncers} / ${totalWeight} ) chance to spawn`;
-    this.chargerChance = `${(weightChargers / totalWeight).toFixed(2)}% ( ${weightChargers} / ${totalWeight} ) chance to spawn`;
-    this.crawlerChance = `${(weightCrawlers / totalWeight).toFixed(2)}% ( ${weightCrawlers} / ${totalWeight} ) chance to spawn`;
-    this.mimicChance = `${(weightMimics / totalWeight).toFixed(2)}% ( ${weightMimics} / ${totalWeight} ) chance to spawn`;
-    this.pusherChance = `${(weightPushers / totalWeight).toFixed(2)}% ( ${weightPushers} / ${totalWeight} ) chance to spawn`;
-    this.wandererChance = `${(weightWanderers / totalWeight).toFixed(2)}% ( ${weightWanderers} / ${totalWeight} ) chance to spawn`;
-    this.warperChance = `${(weightWarpers / totalWeight).toFixed(2)}% ( ${weightWarpers} / ${totalWeight} ) chance to spawn`;
+    this.bouncerChance = `${(weightBouncers / totalWeight *100).toFixed(2)}% ( ${weightBouncers} / ${totalWeight} ) chance to spawn`;
+    this.chargerChance = `${(weightChargers / totalWeight *100).toFixed(2)}% ( ${weightChargers} / ${totalWeight} ) chance to spawn`;
+    this.crawlerChance = `${(weightCrawlers / totalWeight *100).toFixed(2)}% ( ${weightCrawlers} / ${totalWeight} ) chance to spawn`;
+    this.mimicChance = `${(weightMimics / totalWeight *100).toFixed(2)}% ( ${weightMimics} / ${totalWeight} ) chance to spawn`;
+    this.pusherChance = `${(weightPushers / totalWeight *100).toFixed(2)}% ( ${weightPushers} / ${totalWeight} ) chance to spawn`;
+    this.wandererChance = `${(weightWanderers / totalWeight *100).toFixed(2)}% ( ${weightWanderers} / ${totalWeight} ) chance to spawn`;
+    this.warperChance = `${(weightWarpers / totalWeight *100).toFixed(2)}% ( ${weightWarpers} / ${totalWeight} ) chance to spawn`;
   }
 
 
@@ -1032,13 +1063,13 @@ export class LobbyComponent implements OnInit, OnDestroy {
         Warper:   this.configsForm.get(['configsGroup','randomGroup','warperWeight'] as const)?.value
       },
       fixedMobAmounts: {
-        numBouncer:   this.configsForm.get(['configsGroup','fixedGroup','bouncerNum'] as const)?.value,
-        numCharger:   this.configsForm.get(['configsGroup','fixedGroup','chargerNum'] as const)?.value,
-        numCrawler:   this.configsForm.get(['configsGroup','fixedGroup','crawlerNum'] as const)?.value,
-        numMimic:     this.configsForm.get(['configsGroup','fixedGroup','mimicNum'] as const)?.value,
-        numPusher:    this.configsForm.get(['configsGroup','fixedGroup','pusherNum'] as const)?.value,
-        numWanderer:  this.configsForm.get(['configsGroup','fixedGroup','wandererNum'] as const)?.value,
-        numWarper:    this.configsForm.get(['configsGroup','fixedGroup','warperNum'] as const)?.value
+        numBouncers:   this.configsForm.get(['configsGroup','fixedGroup','bouncerNum'] as const)?.value,
+        numChargers:   this.configsForm.get(['configsGroup','fixedGroup','chargerNum'] as const)?.value,
+        numCrawlers:   this.configsForm.get(['configsGroup','fixedGroup','crawlerNum'] as const)?.value,
+        numMimics:     this.configsForm.get(['configsGroup','fixedGroup','mimicNum'] as const)?.value,
+        numPushers:    this.configsForm.get(['configsGroup','fixedGroup','pusherNum'] as const)?.value,
+        numWanderers:  this.configsForm.get(['configsGroup','fixedGroup','wandererNum'] as const)?.value,
+        numWarpers:    this.configsForm.get(['configsGroup','fixedGroup','warperNum'] as const)?.value
       }
     }
     let pack: CreateRoom = {

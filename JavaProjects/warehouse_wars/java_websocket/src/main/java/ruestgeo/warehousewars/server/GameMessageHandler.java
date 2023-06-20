@@ -40,7 +40,7 @@ public abstract class GameMessageHandler {
         if ( !message.has("type") )
             return;
         
-        System.out.println("received ::  "+message.toString());
+        System.out.println("\nreceived ::  "+message.toString());
         String type = message.get("type").getString();
         GameManager manager = GameManager.getGlobalManager();
         Json response = JsonFactory.createObject();

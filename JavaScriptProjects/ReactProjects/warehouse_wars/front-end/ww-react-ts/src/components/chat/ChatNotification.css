@@ -1,0 +1,78 @@
+.chat-notif-entry {
+  font-family: Arial, Helvetica, sans-serif;
+  display:flex;
+  margin: 6px 4px;
+  padding: 10px 10px;
+  border-radius: 10px;
+  justify-content: space-between;
+}
+.chat-notif-text {
+  float:left;
+}
+.chat-notif-close {
+  float: right;
+  margin: 0px 5px;
+  padding: 5px 10px;
+}
+.chat-notif-sending {
+  background-color: cadetblue;
+  color: black;
+}
+.chat-notif-success {
+  background-color: lightgreen;
+  color: darkslategray;
+}
+.chat-notif-failed {
+  background-color: orchid;
+  color: yellow;
+}
+.chat-notif-error {
+  background-color: salmon;
+  color: darkred;
+}
+
+
+
+
+
+
+
+.chat-notif {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  z-index: 999;
+  opacity: 0.70;
+  /*width: fit-content;
+  max-width: 20%;*/
+  width: 20%;
+  height: fit-content;
+  max-height: 30%;
+  overflow: scroll;
+  overflow-x: visible;
+  scrollbar-width: thin;
+}
+
+
+.chat-notif::-webkit-scrollbar-track{
+-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+background-color: #F5F5F5;
+  border-radius: 10px;
+}
+
+.chat-notif::-webkit-scrollbar{
+width: 6px;
+background-color: #F5F5F5;
+}
+
+.chat-notif::-webkit-scrollbar-thumb{
+background-color: #777777;
+}
+
+.chat-notif-close {
+  background-image: url('/invalid.png');
+  background-color: black;
+  background-position: 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat;
+  color: white;
+}

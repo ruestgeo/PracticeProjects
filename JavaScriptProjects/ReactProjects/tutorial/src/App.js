@@ -1,11 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import { Route, Routes, useNavigate, useLocation, Navigate } from 'react-router-dom';
+import { Provider, useSelector, useDispatch } from 'react-redux'
+import store from './redux/store'
 import Test from './components/Test'
 import Button from './components/Button'
 import Items from './components/Items';
 import AddItem from './components/AddItem';
 import  { GenericProvider, GenericConsumer }  from './contexts/GenericContext';
-import  { IndexProvider, IndexConsumer }  from './contexts/IndexContext';
+import  { IndexProvider, IndexProvider2, IndexConsumer }  from './contexts/IndexContext';
+import { setIndex } from './redux/IndexSlice'
 import ReactLogo from './components/ReactLogo';
 
 
@@ -18,6 +21,22 @@ const ExampleComponent = ({a, b, c, d, e}) => {
 }
 const MyComponent = GenericConsumer( ExampleComponent );
 const MyComponent2 = IndexConsumer( ExampleComponent );
+const ExampleComponentRedux = ({a, b, c, indexKey}) => {
+  const index = useSelector((state) => state.index.value);
+  const d = index[indexKey]?.d;
+  const e = index[indexKey]?.e;
+  return ( <>  {a} {b} {c} {d} {e} </> )
+}
+const ExampleComponentReduxSetter = ({value, children}) => {
+  const dispatch = useDispatch();
+  const once = useRef(false);
+  useEffect(() => {
+    if (once.current) return;
+    once.current = true;
+    dispatch(setIndex(value));
+  }, [value,dispatch]);
+  return (<div>{children}</div>)
+}
 
 
 
@@ -159,6 +178,48 @@ function App () {
   }
 
 
+  const TestContainer = () => {
+    return (
+      <div className='center'>
+        <GenericProvider d={4} e={5} f={6}> {/* prop.f is unused as MyComponent doesn't access that property */}
+        <MyComponent a={1} b={2} c={3} /> {" generic context"}
+        </GenericProvider>
+        <br />
+        <IndexProvider contextKey="x" contextValue={{d:4, e:5, f:6}}>
+          <IndexProvider contextKey="y" contextValue={{d:1, e:2, f:3}}>
+            <MyComponent2 a={1} b={2} c={3} contextKey="x"/> {" index context x"}
+            <br/>
+            <MyComponent2 a={1} b={2} c={3} contextKey="y"/> {" index context y"}
+            <br/>
+            <MyComponent2 a={1} b={2} c={3} contextKey="z"/> {" index context z"}
+          </IndexProvider>
+          <br />
+          <MyComponent2 a={1} b={2} c={3} contextKey="y"/> {" index context y out" /* nearest provider does not have y key */}
+        </IndexProvider>
+        <br />
+        <IndexProvider2 context={{"m": {d:4, e:5, f:6}, "n": {d:1, e:2, f:3}}}>
+          <MyComponent2 a={1} b={2} c={3} contextKey="m"/> {" index context m"}
+          <br />
+          <MyComponent2 a={1} b={2} c={3} contextKey="n"/> {" index context n"}
+          <br />
+          <MyComponent2 a={1} b={2} c={3} contextKey="o"/> {" index context o"}
+        </IndexProvider2>
+        <br />
+        <Provider store={store}>
+          <ExampleComponentReduxSetter value={{'s': {'d':4, 'e':5, 'f':6}}} >
+            <ExampleComponentRedux a={1} b={2} c={3} indexKey={"s"} /> {" index redux s"}
+            <br />
+            <ExampleComponentRedux a={1} b={2} c={3} indexKey={"t"} /> {" index redux t"}
+            <br />
+            <ExampleComponentRedux a={1} b={2} c={3} indexKey={"u"} /> {" index redux u"}
+          </ExampleComponentReduxSetter>
+          <ExampleComponentReduxSetter value={{'t': {'d':1, 'e':2, 'f':3}}} />
+        </Provider>
+      </div>
+    )
+  }
+
+
 
 
   return (
@@ -169,23 +230,9 @@ function App () {
       <Button color={"purple"} text={"req id"} fn={requestId}/>
       <br />
       <Button color={"cyan"} text={"show react logo"} fn={() => nav('/react')} />
+      <Button color={"orange"} text={"display test"} fn={() => nav('/test')} />
+      <Button color={"black"} text={"items"} fn={() => nav('/')} />
       <br />
-
-
-      <GenericProvider d={4} e={5} f={6}> {/* prop.f is unused as MyComponent doesn't access that property */}
-        <MyComponent a={1} b={2} c={3} /> {" generic context"}
-      </GenericProvider>
-      <br />
-      <IndexProvider contextKey="x" contextValue={{d:4, e:5, f:6}}>
-        <IndexProvider contextKey="y" contextValue={{d:1, e:2, f:3}}>
-            <MyComponent2 a={1} b={2} c={3} contextKey="x"/> {" index context x"}
-            <br/>
-            <MyComponent2 a={1} b={2} c={3} contextKey="y"/> {" index context y"}
-            <br/>
-            <MyComponent2 a={1} b={2} c={3} contextKey="z"/> {" index context z"}
-        </IndexProvider>
-      </IndexProvider>
-
 
       
 
@@ -194,9 +241,9 @@ function App () {
       <Routes>
         <Route exact path='/' element={<ItemsContainer />} />
         <Route exact path='/react' Component={ReactLogo} />
+        <Route exact path='/test' element={<TestContainer />} />
         <Route path='*' element={<Navigate to='/' />} />
       </Routes>
-      
       
     </>
   );

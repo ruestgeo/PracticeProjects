@@ -5,7 +5,7 @@ import { ClientService } from 'src/app/services/game/client/client.service';
 import { WWUserProfile } from 'src/app/types/WWUser';
 import { UserProfile } from 'src/app/types/User';
 import { PlayerMovement, PlayerReady, PlayerUnready, RequestUpdate } from 'src/app/types/ClientSend';
-import { Direction, EnteredRoom, FullUpdate, GamePackage, MiscActor, MobActor, PlayerActor, PlayersReady, RoomInit, RoomUpdate, isEnteredRoom, isFullUpdate, isPlayersReady, isRoomInit, isRoomUpdate } 
+import { Direction, EnterRoom, FullUpdate, GamePackage, MiscActor, MobActor, PlayerActor, PlayersReady, StageInit, StageUpdate, isEnterRoom, isFullUpdate, isPlayersReady, isStageInit, isStageUpdate } 
   from "src/app/types/ClientReceive";
 export { Direction } from "src/app/types/ClientReceive";
 
@@ -43,7 +43,7 @@ export class RoomService {
   private capacity: number = 0;
 
   private clientUpdateNum: number = 0;
-  private previousUpdateType: 'full' | 'partial' | '' = '';	//"full" or "partial"
+  private previousUpdateType: UpdateType = UpdateType.uninitialized;
   private missedUpdates: number = 0;
 
   private controlsDisabled: boolean = true;
@@ -112,7 +112,7 @@ export class RoomService {
       "Charger-s": "assets/game/charger-s.gif",
       "Charger-w": "assets/game/charger-w.gif",
       "Mimic": "assets/game/mimic1.gif",
-      "Mimic_revealed": "assets/game/mimic_reveal.gif"
+      "Mimic_reveal": "assets/game/mimic_reveal.gif"
 
   };
 
@@ -178,7 +178,7 @@ export class RoomService {
       "Charger-s": "⮋",
       "Charger-w": "⮈",
       "Mimic": "[``]",
-      "Mimic_revealed": "[**]"
+      "Mimic_reveal": "[**]"
   };
 
 
@@ -196,22 +196,22 @@ export class RoomService {
 
   handlePack (pack: GamePackage){
     if (this.updateLock)   return;
-    //*DEV*/ console.log(`ready: ${this.ready}\nstate: ${whatRoomState(this.state)}\nisRoomUpdate: ${isRoomUpdate(pack)}\nisFullUpdate: ${isFullUpdate(pack)}\nisRoomInit: ${isRoomInit(pack)}\nisPlayerReady: ${isPlayersReady(pack)}\nisEnteredRoom: ${isEnteredRoom(pack)}`);
-    if (isRoomUpdate(pack) && this.state === RoomState.gameOngoing)
+    //*DEV*/ console.log(`ready: ${this.ready}\nstate: ${whatRoomState(this.state)}\nisStageUpdate: ${isStageUpdate(pack)}\nisFullUpdate: ${isFullUpdate(pack)}\nisStageInit: ${isStageInit(pack)}\nisPlayerReady: ${isPlayersReady(pack)}\nisEnterRoom: ${isEnterRoom(pack)}`);
+    if (isStageUpdate(pack) && this.state === RoomState.gameOngoing)
       this.partialUpdate(pack);
     else if (isFullUpdate(pack) && this.state === RoomState.gameOngoing)
       this.fullUpdate(pack);
-    else if (isRoomInit(pack) && this.state === RoomState.waitingToStart)
+    else if (isStageInit(pack) && this.state === RoomState.waitingToStart)
       this.initRoom(pack);
     else if (isPlayersReady(pack) && this.state === RoomState.waitingToStart)
       this.playerReady(pack);
-    else if (isEnteredRoom(pack) && this.state === RoomState.uninitialized)
+    else if (isEnterRoom(pack) && this.state === RoomState.uninitialized)
       this.prepRoom(pack);
   }
 
 
 
-  prepRoom (pack: EnteredRoom){
+  prepRoom (pack: EnterRoom){
     //player.out = !player.ready
     this.ready = false;
     this.state = RoomState.waitingToStart;
@@ -223,7 +223,7 @@ export class RoomService {
     console.log(JSON.stringify(this.players));
     for (let i = 0;  i < pack.players.length;  i++){
       if (i >= this.capacity) break;
-      this.players[i] = {num: i, id: pack.players[i].id, name: pack.players[i].name, out: true};
+      this.players[i] = {num: i, id: pack.players[i].id, name: pack.players[i].name, out: !pack.players[i].ready};
       this.playerNums[pack.players[i].id] = i;
     }
     console.log(JSON.stringify(this.players));
@@ -268,7 +268,7 @@ export class RoomService {
 
 
 
-  initRoom (pack: RoomInit){
+  initRoom (pack: StageInit){
     this._id = pack.room_id;
     this._name = pack.room_name;
     this.width = pack.width;
@@ -280,7 +280,7 @@ export class RoomService {
     this.playerNums = {};
     this.capacity = 0;
     this.clientUpdateNum = 0;
-    this.previousUpdateType = '';
+    this.previousUpdateType = UpdateType.uninitialized;
     this.missedUpdates = 0;
     this.controlsDisabled = true;
     this.reveal = false;
@@ -312,7 +312,7 @@ export class RoomService {
     }
 
     this.updateActors(pack.actors.players, pack.actors.mobs, pack.actors.misc);
-    this.previousUpdateType = 'full';
+    this.previousUpdateType = UpdateType.full;
     this.controlsDisabled = false;
     this.clientUpdateNum = pack.updateNum;
 
@@ -325,12 +325,12 @@ export class RoomService {
 
   fullUpdate (pack: FullUpdate){
     let newUpdateNum = pack.updateNum;
-    if ( (this.clientUpdateNum > newUpdateNum) && (newUpdateNum > 0) && (this.previousUpdateType != "full") ){ //dont update if new update seems older
+    if ( (this.clientUpdateNum > newUpdateNum) && (newUpdateNum > 0) && (this.previousUpdateType !== UpdateType.full) ){ //dont update if new update seems older
       this.requestUpdate();
       return;
     }
     this.clientUpdateNum = newUpdateNum;
-    this.previousUpdateType = 'full';
+    this.previousUpdateType = UpdateType.full;
     this.missedUpdates = 0;
     if ( pack.hp < this.hp ){
       this.hpStatus = this.hpStatus.map((_, index) => index < pack.hp);
@@ -342,7 +342,7 @@ export class RoomService {
 
 
 
-  partialUpdate (pack: RoomUpdate){
+  partialUpdate (pack: StageUpdate){
     this.checkUpdateNum(pack);
 
     for (let blank of pack.blanks){
@@ -365,10 +365,10 @@ export class RoomService {
 
 
 
-  private checkUpdateNum (pack: RoomUpdate){
+  private checkUpdateNum (pack: StageUpdate){
     let newUpdateNum = pack.updateNum;
     this.clientUpdateNum = newUpdateNum;
-	  this.previousUpdateType = "partial";
+	  this.previousUpdateType = UpdateType.partial;
     if ( (this.clientUpdateNum > newUpdateNum) ){ //force full update if received an older update or if num wrapped
       this.requestUpdate();
       return;
@@ -394,24 +394,39 @@ export class RoomService {
     }
 
     for (let actor of mobs){
-      let dir = '';
-      switch (actor.dir){
-        case [1,1]:  { dir = "mob_se"; break; }
-        case [1,0]:  { dir = "mob_e";  break; }
-        case [1,-1]: { dir = "mob_ne"; break; }
-        case [0,1]:  { dir = "mob_s";  break; }
-        case [0,-1]: { dir = "mob_n";  break; }
-        case [-1,1]: { dir = "mob_sw"; break; }
-        case [-1,0]: { dir = "mob_w";  break; }
-        case [-1,-1]:{ dir = "mob_nw"; break; }
-        default: { dir = "mob_e" }
+      let dir = 'mob_e';
+      const [x,y] = actor.dir;
+      switch (x){
+        case 1: {
+          switch (y){
+            case 1:  { dir = "mob_se"; break; }
+            case 0:  { dir = "mob_e";  break; }
+            case -1: { dir = "mob_ne"; break; }
+          }
+          break;
+        }
+        case 0: {
+          switch (y){
+            case 1:  { dir = "mob_s";  break; }
+            case -1: { dir = "mob_n";  break; }
+          }
+          break;
+        }
+        case -1: {
+          switch (y){
+            case 1: { dir = "mob_sw"; break; }
+            case 0: { dir = "mob_w";  break; }
+            case -1:{ dir = "mob_nw"; break; }
+          }
+          break;
+        }
       }
 
       if (this.reveal && actor.class === "Mimic")
         this.setImage(actor.pos[0], actor.pos[1], this.imgs["Mimic_reveal"], this.alts["Mimic_reveal"], actor.class);
       //else if ( type === "Charger" )  this.setImage(actor.pos[0], actor.pos[1], this.imgs[(actor.class + dir)], this.alts[actor.class], actor.class);
       else 
-        this.setImage(actor.pos[0], actor.pos[1], this.imgs[actor.class], this.alts[actor.class], (actor.class + dir)); 
+        this.setImage(actor.pos[0], actor.pos[1], this.imgs[actor.class], this.alts[actor.class], [actor.class, dir]); 
     }
 
     for (let actor of players){
@@ -464,6 +479,7 @@ export class RoomService {
   mimicReveal (){
     if (this.reveal || this.updateLock)   return;
 
+    console.log('mimic reveal started');
     this.reveal = true; 
     let mimics: StageCell[] = [];
     for (let row of this.stage){
@@ -475,20 +491,22 @@ export class RoomService {
         }
       }
     }
-    setTimeout(() => {
-      this.reveal = false;
+    setTimeout((_this) => {
+      console.log('mimic reveal ended');
+      _this.reveal = false;
       for (let actor of mimics){
-        actor.src = this.imgs["Mimic"];
-        actor.alt = this.alts["Mimic"];
+        actor.src = _this.imgs["Mimic"];
+        actor.alt = _this.alts["Mimic"];
       }
-    }, 2000);
+      _this.requestUpdate();
+    }, 2000, this);
   }
 
 
 
   requestUpdate (){
     if (this.updateLock)  return;
-    if (this.previousUpdateType != "full")  return;
+    if (this.previousUpdateType !== UpdateType.full)  return;
     let pack: RequestUpdate = {"type": "request_update", 'room_id': this.id, 'player_id': this.user.id};
     this.client.sendPackage(pack);
   }
@@ -510,7 +528,7 @@ export class RoomService {
     this.capacity =         0;
     this.clientUpdateNum =  0;
     this.missedUpdates =    0;
-    this.previousUpdateType = '';
+    this.previousUpdateType = UpdateType.uninitialized;
     this.controlsDisabled = true;
     this.reveal = false;
     
@@ -640,4 +658,9 @@ function whatRoomState (state: RoomState): string {
     }
     default: return '';
   }
+}
+
+
+enum UpdateType {
+  'uninitialized', 'full', 'partial'
 }

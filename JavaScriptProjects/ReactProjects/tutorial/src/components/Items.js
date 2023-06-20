@@ -7,7 +7,7 @@ import { GenericContext } from '../contexts/GenericContext';
 const Items = () => {
 
   const {items} = useContext(GenericContext);
-  console.log(items);
+  //console.log(items);
 
 
   return (

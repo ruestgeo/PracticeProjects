@@ -12,15 +12,34 @@ export const IndexContext = React.createContext({});
 
 
 /**
- * Create a component providing value to an indexable context
+ * Create a component providing properties to an indexable context
  * @param {*} props properties of the component
- * @param props.context an object of properties with a key index
+ * @param props.contextKey a key index to the contextValue
+ * @param props.contextValue an object of properties for the contextKey
  * @returns html component
  */
 export const IndexProvider = (props) => {
   const { children, contextKey, contextValue } = props;
   const index = {...useContext(IndexContext)};
   index[contextKey] = contextValue;
+  return (
+    <IndexContext.Provider value={index}>
+      { children }
+    </IndexContext.Provider>
+  );
+}
+
+
+
+/**
+ * Create a component providing properties to an indexable context
+ * @param {*} props properties of the component
+ * @param props.context an object of properties with a key index
+ * @returns html component
+ */
+export const IndexProvider2 = (props) => {
+  const { children, context } = props;
+  const index = {...useContext(IndexContext), ...context};
   return (
     <IndexContext.Provider value={index}>
       { children }

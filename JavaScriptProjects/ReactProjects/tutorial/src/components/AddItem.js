@@ -7,6 +7,7 @@ const AddItem = () => {
   const [text, setText] = useState('');
   const [desc, setDesc] = useState('');
   const [color, setColor] = useState(DEFAULT_COLOR);
+  const [enabled, setEnabled] = useState(true);
 
   const { addItem /*, requestId*/ } = useContext(GenericContext);
 
@@ -18,7 +19,7 @@ const AddItem = () => {
       return;
     }
 
-    //TODO disable submit
+    setEnabled(false);
     const id = -1; //await requestId();
     let item = {id, text, };
     if (desc && desc !== '')
@@ -29,8 +30,7 @@ const AddItem = () => {
       setText('');
       setDesc('');
       setColor(DEFAULT_COLOR);
-      //enable submit
-    });
+    }).finally(() => setEnabled(true));
   }
 
 
@@ -60,7 +60,7 @@ const AddItem = () => {
 
       <ColorSelect selectedColor={color} setColor={setColor}/>
 
-      <input type="submit" value="Save Item" className="btn btn-block" />
+      <input type="submit" value="Save Item" className="btn btn-block" disabled={!enabled} />
 
     </form>
   )
